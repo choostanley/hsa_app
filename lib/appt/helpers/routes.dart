@@ -1,0 +1,10 @@
+const loginRoute = "/login";
+const signupRoute = "/signup";
+const appOwnerRoute ="/app_owner";
+const ptProfileRoute = "/pt_profile";
+const reqApptRoute = "/req_appt";
+const apptListRoute = "/appt_list";
+const createArRoute = "/create_ar";
+const createPtRoute = "/create_pt";
+const tTableRoute = "/t_table";
+const notiListRoute = "/noti_list";
