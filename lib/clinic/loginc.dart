@@ -17,6 +17,7 @@ class Loginc extends StatefulWidget {
 class _LogincState extends State<Loginc> {
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
+  bool _passwordVisible = false;
 
   @override
   void initState() {
@@ -89,9 +90,23 @@ class _LogincState extends State<Loginc> {
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: MinLengthValidator(6,
                           errorText: 'Password must be at least 6 digits long'),
-                      decoration: const InputDecoration(
-                          labelText: 'Password', hintText: 'Numbers only'),
-                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Numbers only',
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                      obscureText: !_passwordVisible,
                       onFieldSubmitted: (val) => _tryLogin(),
                     ),
                     const SizedBox(
