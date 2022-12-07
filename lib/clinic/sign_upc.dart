@@ -24,6 +24,7 @@ class _SignUpcState extends State<SignUpc> {
   bool _isLoading = false;
   final List<String> _dropdownTitles = ['Dr', 'Sn', ''];
   PhoneNumber number = PhoneNumber(isoCode: 'MY');
+  bool _passwordVisible = false;
 
   @override
   void initState() {
@@ -182,21 +183,24 @@ class _SignUpcState extends State<SignUpc> {
                       ignoreBlank: false,
                       autoValidateMode: AutovalidateMode.disabled,
                       selectorTextStyle: const TextStyle(color: Colors.black),
-                      textFieldController: drsnController.phone,
+                      // textFieldController: drsnController.phone,
                       hintText: '123456789',
                       formatInput: false, // experiment - type alphabets
                       keyboardType:
                           const TextInputType.numberWithOptions(signed: true),
                       inputBorder: const OutlineInputBorder(),
                       onSaved: (PhoneNumber number) {
-                        print('On Saved: $number');
-                        if (number.isoCode == 'MY' &&
-                            drsnController.phone.text[0] == '0') {
-                          drsnController.phone.text =
-                              drsnController.phone.text.substring(1);
-                        }
+                        String holder = '';
+                        holder = number.phoneNumber!;
+                        holder = holder.replaceAll(RegExp(r'\+600'), '+60');
+                        // print('On Saved: $number');
+                        // if (number.isoCode == 'MY' &&
+                        //     drsnController.phone.text[0] == '0') {
+                        //   drsnController.phone.text =
+                        //       drsnController.phone.text.substring(1);
+                        // }
                         drsnController.phone.text =
-                            number.phoneNumber!; // cannot if not valid
+                            holder; // cannot if not valid
                       },
                     ),
                     TextFormField(
@@ -257,12 +261,27 @@ class _SignUpcState extends State<SignUpc> {
                         }
                         return null;
                       },
-                      decoration: const InputDecoration(
-                          labelText: 'Password', hintText: 'Numbers only'),
-                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Numbers only',
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                      obscureText: !_passwordVisible,
                       onSaved: (value) {
                         drsnController.password.text = value!.trim();
                       },
+                      onFieldSubmitted: (val) => _submitAuthForm(),
                     ),
                     const SizedBox(
                       height: 15,

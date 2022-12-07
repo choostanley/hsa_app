@@ -87,38 +87,45 @@ class _SchedulePageState extends State<SchedulePage> {
         body: WillPopScope(
             onWillPop: conWillPop,
             child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 500),
-                child: Padding(
-                  // try out
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // const SizedBox(height: 10),
-                      FutureBuilder(
+              // child: ConstrainedBox(
+              //   constraints: const BoxConstraints(maxWidth: 500),
+              child: Padding(
+                // try out
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // const SizedBox(height: 10),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 400),
+                      child: FutureBuilder(
                         future: localSc.getDayModelList(),
                         builder: (BuildContext context,
                             AsyncSnapshot<List<DayModel>> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
                             return ScheduleCalendar(
                               sm: localSc,
                               dayFn: _pickedDate,
                             );
                           } else {
-                            return const CircularProgressIndicator();
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
                         },
                       ),
-                      const SizedBox(height: 8),
-                      // This expanded when first create schedule, press date hourRow not showing
-                      // If change date then only show
-                      Expanded(
-                        child: ValueListenableBuilder<List<HourModel>>(
-                          valueListenable: _hourRows,
-                          builder: (context, value, _) {
-                            return ListView.builder(
+                    ),
+                    const SizedBox(height: 8),
+                    // This expanded when first create schedule, press date hourRow not showing
+                    // If change date then only show
+                    Expanded(
+                      child: ValueListenableBuilder<List<HourModel>>(
+                        valueListenable: _hourRows,
+                        builder: (context, value, _) {
+                          return ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 800),
+                            child: ListView.builder(
                               itemCount: value.length,
                               itemBuilder: (context, index) {
                                 return HourRow(
@@ -127,14 +134,15 @@ class _SchedulePageState extends State<SchedulePage> {
                                   key: Key(getRandomString(5)),
                                 );
                               },
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  ],
                 ),
               ),
+              // ),
             )));
   }
 }

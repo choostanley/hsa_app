@@ -152,7 +152,7 @@ class DrsnController extends GetxController {
         });
       }
       await auth.signOut();
-      await FirebaseMessaging.instance.deleteToken();
+      if (await messaging.isSupported()) await messaging.deleteToken();
       userController.clear();
     } catch (error) {
       redSnackBar('Error signing out', error.toString());

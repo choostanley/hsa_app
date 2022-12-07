@@ -151,7 +151,7 @@ class PtController extends GetxController {
         });
       }
       await auth.signOut();
-      await FirebaseMessaging.instance.deleteToken();
+      if (await messaging.isSupported()) await messaging.deleteToken();
       // Get.find<UserController>().clear();
       userController.clear();
     } catch (error) {

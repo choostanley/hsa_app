@@ -29,6 +29,7 @@ class _RoomState extends State<Room> {
   late List<ScheduleModel> localScList;
   late String generalScId;
   late Future<List<UserModel>> drs;
+  final yourScrollController = ScrollController();
 
   @override
   void initState() {
@@ -129,39 +130,48 @@ class _RoomState extends State<Room> {
                       ),
                       const SizedBox(height: 5),
                       SizedBox(
-                        height: 40,
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: localScList.length,
-                            itemBuilder: (context, index) {
-                              ScheduleModel nowie = localScList[index];
-                              return Container(
-                                margin: const EdgeInsets.only(right: 2),
-                                decoration: BoxDecoration(
-                                    border: Border.all(),
-                                    borderRadius: BorderRadius.circular(5)),
-                                width: 150,
-                                child: RadioListTile<String>(
-                                  selected: generalScId == nowie.id,
-                                  title: Text(nowie.name,
-                                      overflow: TextOverflow.ellipsis),
-                                  value: nowie.id,
-                                  groupValue: generalScId,
-                                  dense: true,
-                                  visualDensity: const VisualDensity(
-                                      horizontal: -3, vertical: -3),
-                                  onChanged: (String? value) async {
-                                    // generalScId = value!;
-                                    // calender = await createCalender(generalScId);
-                                    setState(() {
-                                      generalScId = value!;
-                                      // chosedSm = value;
-                                    });
-                                  },
-                                ),
-                              );
-                            }),
+                        height: 50,
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          thickness: 10,
+                          controller: yourScrollController,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: ListView.builder(
+                                controller: yourScrollController,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: localScList.length,
+                                itemBuilder: (context, index) {
+                                  ScheduleModel nowie = localScList[index];
+                                  return Container(
+                                    margin: const EdgeInsets.only(right: 2),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    width: 150,
+                                    child: RadioListTile<String>(
+                                      selected: generalScId == nowie.id,
+                                      title: Text(nowie.name,
+                                          overflow: TextOverflow.ellipsis),
+                                      value: nowie.id,
+                                      groupValue: generalScId,
+                                      dense: true,
+                                      visualDensity: const VisualDensity(
+                                          horizontal: -3, vertical: -3),
+                                      onChanged: (String? value) async {
+                                        // generalScId = value!;
+                                        // calender = await createCalender(generalScId);
+                                        setState(() {
+                                          generalScId = value!;
+                                          // chosedSm = value;
+                                        });
+                                      },
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 5),
                       const Text('Patients: ',

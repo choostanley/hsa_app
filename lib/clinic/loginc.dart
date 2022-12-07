@@ -64,23 +64,26 @@ class _LogincState extends State<Loginc> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    TextFormField(
-                      autofocus: true,
-                      controller: drsnController.email,
-                      textCapitalization: TextCapitalization.none,
-                      key: const ValueKey('email'),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.deny(RegExp(r'\s'))
-                      ],
-                      validator: EmailValidator(
-                          errorText: 'Please enter a valid email address'),
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
+                    AutofillGroup(
+                      child: TextFormField(
+                        autofocus: true,
+                        controller: drsnController.email,
+                        textCapitalization: TextCapitalization.none,
+                        key: const ValueKey('email'),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s'))
+                        ],
+                        validator: EmailValidator(
+                            errorText: 'Please enter a valid email address'),
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                        ),
+                        onFieldSubmitted: (v) {
+                          FocusScope.of(context).requestFocus(focus);
+                        },
+                        autofillHints: const [AutofillHints.email],
                       ),
-                      onFieldSubmitted: (v) {
-                        FocusScope.of(context).requestFocus(focus);
-                      },
                     ),
                     TextFormField(
                       focusNode: focus,

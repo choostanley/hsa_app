@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import '/common/functions.dart';
 
 class PtModel {
@@ -54,11 +55,11 @@ class PtModel {
   String gw(int ii) {
     switch (ii) {
       case 0:
-        return 'Male';
+        return 'male'.tr;
       case 2:
-        return 'Female';
+        return 'female'.tr;
       default:
-        return 'Ambiguous / Transgender';
+        return 'ambiguous'.tr;
     }
   }
 }

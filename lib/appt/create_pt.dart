@@ -195,6 +195,8 @@ class _CreatePtState extends State<CreatePt> {
                       textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 7),
+                    Text('gender'.tr, style: const TextStyle(fontSize: 14)),
+                    const SizedBox(height: 7),
                     ToggleButtons(
                       onPressed: (int index) {
                         setState(() {
@@ -210,10 +212,42 @@ class _CreatePtState extends State<CreatePt> {
                         });
                       },
                       isSelected: isSelected,
-                      children: const <Widget>[
-                        Icon(Icons.male),
-                        Icon(Icons.female),
-                        Icon(Icons.transgender),
+                      children: <Widget>[
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(minWidth: 65),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                const Icon(Icons.male),
+                                Text('male'.tr)
+                              ],
+                            ),
+                          ),
+                        ),
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(minWidth: 65),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                const Icon(Icons.female),
+                                Text('female'.tr)
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              const Icon(Icons.transgender),
+                              Text('ambiguous'.tr)
+                            ],
+                          ),
+                        ),
+                        // Icon(Icons.female),
+                        // Icon(Icons.transgender),
                       ],
                     ),
                     const SizedBox(

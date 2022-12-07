@@ -64,25 +64,36 @@ class _LoginState extends State<Login> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    TextFormField(
-                      autofocus: true,
-                      controller: ptController.email,
-                      textCapitalization: TextCapitalization.none,
-                      key: const ValueKey('email'),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.deny(RegExp(r'\s'))
-                      ],
-                      validator: EmailValidator(
-                          errorText: 'Please enter a valid email address'),
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
+                    AutofillGroup(
+                      child: TextFormField(
+                        autofocus: true,
+                        controller: ptController.email,
+                        textCapitalization: TextCapitalization.none,
+                        key: const ValueKey('email'),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s'))
+                        ],
+                        validator: EmailValidator(
+                            errorText: 'Please enter a valid email address'),
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                        ),
+                        onFieldSubmitted: (v) {
+                          FocusScope.of(context).requestFocus(focus);
+                        }, 
+                        // use this autofocus will go to next field - upon starting app only
+                        // on hosting macam no problem
+                        autofillHints: const [
+                          AutofillHints.email
+                        ], 
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () =>
+                            TextInput.finishAutofillContext(),
                       ),
-                      onFieldSubmitted: (v) {
-                        FocusScope.of(context).requestFocus(focus);
-                      },
                     ),
                     TextFormField(
+                      // autofocus: false,
                       focusNode: focus,
                       controller: ptController.password,
                       keyboardType: TextInputType.number,
@@ -108,6 +119,8 @@ class _LoginState extends State<Login> {
                       ),
                       obscureText: !_passwordVisible,
                       onFieldSubmitted: (val) => _tryLogin(),
+                      // !!! if include this line - inside appowner will call initState twice
+                      // autofillHints: const [AutofillHints.password], 
                     ),
                     const SizedBox(
                       height: 15,
@@ -122,7 +135,7 @@ class _LoginState extends State<Login> {
                       TextButton(
                         style: TextButton.styleFrom(
                             foregroundColor: Theme.of(context).primaryColor),
-                        onPressed: () => Get.to(SignUp()),
+                        onPressed: () => Get.to(const SignUp()),
                         child: const Text('Create an account'),
                       ),
                     // TextButton(

@@ -27,6 +27,7 @@ class _HourRowState extends State<HourRow> {
   ValueNotifier<List<Appt>> appts = ValueNotifier<List<Appt>>([]);
   late HourModel localHr;
   late bool first;
+  final yourScrollController = ScrollController();
 
   @override
   void initState() {
@@ -70,7 +71,7 @@ class _HourRowState extends State<HourRow> {
         ? '[LHr]'
         : '[${localHr.curApptNum.toString()}/${localHr.maxForThisSlot.toString()}]';
     return Container(
-        // padding: const EdgeInsets.fromLTRB(2, 3, 2, 3),
+        padding: const EdgeInsets.only(bottom: 10),
         margin: const EdgeInsets.only(right: 4),
         decoration: BoxDecoration(
             border: Border.all(), borderRadius: BorderRadius.circular(5)),
@@ -109,7 +110,7 @@ class _HourRowState extends State<HourRow> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: 80, // 60,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -120,13 +121,21 @@ class _HourRowState extends State<HourRow> {
               builder: (context, value, _) {
                 return value.isEmpty
                     ? Container()
-                    : ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: value.length,
-                        itemBuilder: (context, index) {
-                          return apptTile(
-                              value[index], value.length - (index + 1));
-                        },
+                    : Scrollbar(
+                        thumbVisibility: true,
+                        thickness: 10,
+                        controller: yourScrollController,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: value.length,
+                            itemBuilder: (context, index) {
+                              return apptTile(
+                                  value[index], value.length - (index + 1));
+                            },
+                          ),
+                        ),
                       );
               },
             ),

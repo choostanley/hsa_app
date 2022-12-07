@@ -75,6 +75,11 @@ void blueSnackBar(String m0, String m1) {
       snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.blue);
 }
 
+void purpleSnackBar(String m0, String m1) {
+  Get.snackbar(m0, m1,
+      snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.purple);
+}
+
 void topBlueSnackBar(String m0, String m1) {
   Get.snackbar(m0, m1,
       duration: const Duration(seconds: 6),

@@ -33,7 +33,7 @@ class _EndDrawerState extends State<EndDrawer> {
       onTap: () => widget.currentPage == route
           ? Get.back()
           : off
-              ? Get.offNamed(route)
+              ? Get.offAllNamed(route) // Get.offNamed(route) - no more back button
               : Get.toNamed(route),
       tileColor: widget.currentPage == route
           ? Theme.of(context).primaryColorLight

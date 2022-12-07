@@ -47,6 +47,8 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
   TextEditingController remCont = TextEditingController(text: '');
   ScheduleModel generalSc = ScheduleModel();
   List<HourModel> _dayHours = [];
+  final yourScrollController = ScrollController();
+  final yourScrollController1 = ScrollController();
 
   @override
   void initState() {
@@ -157,40 +159,50 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
           //     if (snapshot.connectionState == ConnectionState.done) {
           //       return
           SizedBox(
-            height: 40,
-            child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: widget.smList.length,
-                itemBuilder: (context, index) {
-                  ScheduleModel nowie = widget.smList[index];
-                  return Container(
-                    margin: const EdgeInsets.only(right: 2),
-                    decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(5)),
-                    width: 150,
-                    child: RadioListTile<ScheduleModel>(
-                      selected: generalSc == nowie,
-                      title: Text(nowie.name, overflow: TextOverflow.ellipsis),
-                      value: nowie,
-                      groupValue: generalSc,
-                      dense: true,
-                      visualDensity:
-                          const VisualDensity(horizontal: -3, vertical: -3),
-                      onChanged: (ScheduleModel? value) async {
-                        // setState(() async {
-                        generalSc = value!;
-                        calender = await createCalender(generalSc);
-                        setState(() {
-                          generalSc = value;
-                          chosedSm = value;
-                        });
-                        // });
-                      },
-                    ),
-                  );
-                }),
+            height: 50,
+            child: Scrollbar(
+              thumbVisibility: true,
+              thickness: 10,
+              controller: yourScrollController,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    controller: yourScrollController,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.smList.length,
+                    itemBuilder: (context, index) {
+                      ScheduleModel nowie = widget.smList[index];
+                      return Container(
+                        margin: const EdgeInsets.only(right: 2),
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(5)),
+                        width: 150,
+                        child: RadioListTile<ScheduleModel>(
+                          selected: generalSc == nowie,
+                          title:
+                              Text(nowie.name, overflow: TextOverflow.ellipsis),
+                          value: nowie,
+                          groupValue: generalSc,
+                          dense: true,
+                          visualDensity:
+                              const VisualDensity(horizontal: -3, vertical: -3),
+                          onChanged: (ScheduleModel? value) async {
+                            // setState(() async {
+                            generalSc = value!;
+                            calender = await createCalender(generalSc);
+                            setState(() {
+                              generalSc = value;
+                              chosedSm = value;
+                            });
+                            // });
+                          },
+                        ),
+                      );
+                    }),
+              ),
+            ),
           )
           //       ;
           //     } else {
@@ -207,103 +219,119 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
               return value.isEmpty
                   ? Container()
                   : SizedBox(
-                      height: 45,
-                      child: ListView.builder(
-                        // shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: value.length,
-                        itemBuilder: (context, index) {
-                          HourModel localHr = value[index];
-                          int curNo = localHr.curApptNum;
-                          int maxNo = localHr.maxForThisSlot;
-                          bool stillCanAdd = maxNo > curNo;
-                          String apptNo =
-                              localHr.lunchHour ? '[LHr]' : '[$curNo/$maxNo]';
-                          String apptTime =
-                              DateFormat(index == 0 ? 'HH:mm' : 'kk:mm')
-                                  .format(localHr.startDateTime);
-                          return Container(
-                            margin: const EdgeInsets.only(right: 2),
-                            decoration: BoxDecoration(
-                                border: Border.all(),
-                                borderRadius: BorderRadius.circular(5)),
-                            width: 150,
-                            child: ListTile(
-                              title: Text('${apptTime}H  $apptNo'),
-                              dense: true,
-                              visualDensity: const VisualDensity(
-                                  horizontal: -2, vertical: -2),
-                              trailing: IconButton(
-                                color: Colors.lightBlueAccent,
-                                icon: const Icon(Icons.add_circle),
-                                onPressed: stillCanAdd
-                                    ? () {
-                                        Get.defaultDialog(
-                                          barrierDismissible:
-                                              creatingAppt ? false : true,
-                                          title: 'Make Appointment',
-                                          content: StatefulBuilder(builder:
-                                              (context, StateSetter setState) {
-                                            return Column(
-                                              children: [
-                                                Text(
-                                                    'Make appointment under ${generalSc.name} \n at ${apptTime}H on ${getDate(localHr.startDateTime)}'),
-                                                TextFormField(
-                                                  key: const ValueKey('remark'),
-                                                  keyboardType:
-                                                      TextInputType.name,
-                                                  controller: remCont,
-                                                  validator: (val) {
-                                                    if (val!.trim().isEmpty) {
-                                                      return 'Remark is required!';
-                                                    }
-                                                    return null;
-                                                  },
-                                                  decoration:
-                                                      const InputDecoration(
-                                                    labelText: 'Remark',
-                                                  ),
-                                                  onSaved: (value) {
-                                                    remCont.text =
-                                                        value!.trim();
-                                                  },
-                                                ),
-                                                const SizedBox(height: 8),
-                                                creatingAppt
-                                                    ? const CircularProgressIndicator()
-                                                    : ElevatedButton(
-                                                        onPressed: () async {
-                                                          setState(() {
-                                                            creatingAppt = true;
-                                                          });
-                                                          String that =
-                                                              await createAppt(
-                                                                  localHr);
-                                                          Get.back();
-                                                          if (that ==
-                                                              'Good Shit') {
-                                                            creatingAppt =
-                                                                false;
-                                                            Get.offNamedUntil(
-                                                                receivedRefRoute,
-                                                                (route) =>
-                                                                    false);
-                                                          }
-                                                        },
-                                                        child: const Text(
-                                                            'Confirm'))
-                                              ],
+                      height: 55,
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        thickness: 10,
+                        controller: yourScrollController1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: ListView.builder(
+                            // shrinkWrap: true,
+                            controller: yourScrollController1,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: value.length,
+                            itemBuilder: (context, index) {
+                              HourModel localHr = value[index];
+                              int curNo = localHr.curApptNum;
+                              int maxNo = localHr.maxForThisSlot;
+                              bool stillCanAdd = maxNo > curNo;
+                              String apptNo = localHr.lunchHour
+                                  ? '[LHr]'
+                                  : '[$curNo/$maxNo]';
+                              String apptTime =
+                                  DateFormat(index == 0 ? 'HH:mm' : 'kk:mm')
+                                      .format(localHr.startDateTime);
+                              return Container(
+                                margin: const EdgeInsets.only(right: 2),
+                                decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(5)),
+                                width: 150,
+                                child: ListTile(
+                                  title: Text('${apptTime}H  $apptNo'),
+                                  dense: true,
+                                  visualDensity: const VisualDensity(
+                                      horizontal: -2, vertical: -2),
+                                  trailing: IconButton(
+                                    color: Colors.lightBlueAccent,
+                                    icon: const Icon(Icons.add_circle),
+                                    onPressed: stillCanAdd
+                                        ? () {
+                                            Get.defaultDialog(
+                                              barrierDismissible:
+                                                  creatingAppt ? false : true,
+                                              title: 'Make Appointment',
+                                              content: StatefulBuilder(builder:
+                                                  (context,
+                                                      StateSetter setState) {
+                                                return Column(
+                                                  children: [
+                                                    Text(
+                                                        'Make appointment under ${generalSc.name} \n at ${apptTime}H on ${getDate(localHr.startDateTime)}'),
+                                                    TextFormField(
+                                                      key: const ValueKey(
+                                                          'remark'),
+                                                      keyboardType:
+                                                          TextInputType.name,
+                                                      controller: remCont,
+                                                      validator: (val) {
+                                                        if (val!
+                                                            .trim()
+                                                            .isEmpty) {
+                                                          return 'Remark is required!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        labelText: 'Remark',
+                                                      ),
+                                                      onSaved: (value) {
+                                                        remCont.text =
+                                                            value!.trim();
+                                                      },
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    creatingAppt
+                                                        ? const CircularProgressIndicator()
+                                                        : ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              setState(() {
+                                                                creatingAppt =
+                                                                    true;
+                                                              });
+                                                              String that =
+                                                                  await createAppt(
+                                                                      localHr);
+                                                              Get.back();
+                                                              if (that ==
+                                                                  'Good Shit') {
+                                                                creatingAppt =
+                                                                    false;
+                                                                Get.offNamedUntil(
+                                                                    receivedRefRoute,
+                                                                    (route) =>
+                                                                        false);
+                                                              }
+                                                            },
+                                                            child: const Text(
+                                                                'Confirm'))
+                                                  ],
+                                                );
+                                              }),
+                                              // ),
+                                              // confirm:
                                             );
-                                          }),
-                                          // ),
-                                          // confirm:
-                                        );
-                                      }
-                                    : null,
-                              ),
-                            ),
-                          );
-                        },
+                                          }
+                                        : null,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     );
             },

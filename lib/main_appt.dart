@@ -67,24 +67,26 @@ void main() async {
     Get.put(ClinicController());
     Get.put(PtListController());
   });
-  await FirebaseMessaging.instance.getInitialMessage();
-  FirebaseMessaging.onBackgroundMessage(_fbMessagingBackgroudHandler);
-  if (kIsWeb) {
-    Map<String, String> header = <String, String>{
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Authorization':
-          'key=AAAAzvKz-NQ:APA91bFoJlr0AAMP0vpqazM7rkZA-kZGwUlM3DllGmkSIYp0c0erG2njGrohHaY046L2T6Ok9ci_P_bFCRqJtQhPApvJRBmG05yv0oX81A9LHSpfyNuZOhmuHJEeCJ_8bvp16h2EFlmR'
-    };
-    FirebaseMessaging.instance.getToken().then((value) {
-      String token = value!;
-      http.post(
-        Uri.parse('https://iid.googleapis.com/iid/v1/$token/rel/topics/pt'),
-        headers: header,
-      );
-    });
-  } else {
-    await FirebaseMessaging.instance.subscribeToTopic('pt');
+  if (await messaging.isSupported()) {
+    await messaging.getInitialMessage();
+    FirebaseMessaging.onBackgroundMessage(_fbMessagingBackgroudHandler);
+    if (kIsWeb) {
+      Map<String, String> header = <String, String>{
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization':
+            'key=AAAAzvKz-NQ:APA91bFoJlr0AAMP0vpqazM7rkZA-kZGwUlM3DllGmkSIYp0c0erG2njGrohHaY046L2T6Ok9ci_P_bFCRqJtQhPApvJRBmG05yv0oX81A9LHSpfyNuZOhmuHJEeCJ_8bvp16h2EFlmR'
+      };
+      messaging.getToken().then((value) {
+        String token = value!;
+        http.post(
+          Uri.parse('https://iid.googleapis.com/iid/v1/$token/rel/topics/pt'),
+          headers: header,
+        );
+      });
+    } else {
+      await messaging.subscribeToTopic('pt');
+    }
   }
   await GetStorage.init();
   runApp(const MyApp());

@@ -19,6 +19,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  bool _passwordVisible = false;
 
   @override
   void initState() {
@@ -93,7 +94,7 @@ class _SignUpState extends State<SignUp> {
                       },
                       controller: ptController.name,
                       decoration: const InputDecoration(
-                        labelText: 'Name',
+                        labelText: 'Name as per IC',
                       ),
                       onSaved: (value) {
                         ptController.name.text = value!.trim();
@@ -143,6 +144,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     const SizedBox(height: 7),
                     IntlPhoneField(
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       disableLengthCheck: true,
                       decoration: const InputDecoration(
                         labelText: 'Phone Number',
@@ -152,11 +154,17 @@ class _SignUpState extends State<SignUp> {
                       ),
                       initialCountryCode: 'MY',
                       onChanged: (phone) {
-                        // print(phone.completeNumber);
+                        print(phone);
                       },
-                      controller: ptController.phone,
+                      // controller: ptController.phone,
                       onSaved: (value) {
-                        ptController.phone.text = value!.completeNumber.trim();
+                        print(value);
+                        String holder = '';
+                        holder = value!.completeNumber.trim();
+                        holder = holder.replaceAll(RegExp(r'\+600'), '+60');
+                        ptController.phone.text = holder;
+                        print(ptController.phone.text);
+                        // change on... dataMap side, test a bit
                       },
                       textInputAction: TextInputAction.next,
                     ),
@@ -172,13 +180,28 @@ class _SignUpState extends State<SignUp> {
                         }
                         return null;
                       },
-                      decoration: const InputDecoration(
-                          labelText: 'Password', hintText: 'Numbers only'),
-                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Numbers only',
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                      obscureText: !_passwordVisible,
                       onSaved: (value) {
                         ptController.password.text = value!.trim();
                       },
                       textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (val) => _submitAuthForm(),
                     ),
                     const SizedBox(
                       height: 15,
