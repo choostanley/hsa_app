@@ -55,6 +55,19 @@ class _RoomsPageState extends State<RoomsPage> {
   //   return emptyRooms;
   // }
 
+  Future<bool> kickOutFromAllRooms() async {
+    QuerySnapshot<Object?> bbbs = await attachRoomRef
+        .where('staffId', isEqualTo: userController.user.id)
+        .where('active', isEqualTo: true)
+        .get();
+    if (bbbs.docs.isNotEmpty) {
+      for (var roomref in bbbs.docs) {
+        attachRoomRef.doc(roomref.id).update({'active': false});
+      }
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     drsnController.ctx = context;
@@ -161,6 +174,7 @@ class _RoomsPageState extends State<RoomsPage> {
                                                     : () async {
                                                         setState(() =>
                                                             enteredRoom = true);
+                                                        await kickOutFromAllRooms();
                                                         await attachRoomRef
                                                             .add({
                                                           'staffId':

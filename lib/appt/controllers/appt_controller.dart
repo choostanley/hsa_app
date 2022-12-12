@@ -39,7 +39,7 @@ class ApptController extends GetxController {
     return renew;
   }
 
-  Future<List> refreshApptList() async {
+  Future<List<Appt>> refreshApptList() async {
     List<Appt> renew = [];
     await apptRef
         .where('ptId', isEqualTo: ptListController.currentPt.value.id)

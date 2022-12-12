@@ -7,6 +7,7 @@ import 'controllers/controllers.dart';
 import 'create_ar.dart';
 import '/common/functions.dart';
 import 'view_req.dart';
+import 'widgets/bottom_nav.dart';
 import 'widgets/end_drawer.dart';
 import 'widgets/lead_drawer.dart';
 import 'package:intl/intl.dart';
@@ -59,27 +60,15 @@ class _ReqApptState extends State<ReqAppt> {
 
   @override
   Widget build(BuildContext context) {
-    // UserModel u = ac.getUserModel;
-    // var platform = Theme.of(context).platform;
     ptController.ctx = context;
-    // return
-    //     // Obx(() =>
-    //     FutureBuilder<List>(
-    //   future: getAllAppt(),
-    //   builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-    //     if (snapshot.hasError) {
-    //       return Center(child: Text(snapshot.error.toString()));
-    //     } else if (snapshot.connectionState == ConnectionState.done) {
-    //       // UserModel u = UserModel.fromSnapshot(snapshot.!data);
-    //       UserModel useHere = snapshot.data!;
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text('req appt'.tr),
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-          ),
+          // leading: IconButton(
+          //   icon: const Icon(Icons.menu),
+          //   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          // ),
           actions: [
             IconButton(
               icon: const Icon(Icons.add),
@@ -98,7 +87,7 @@ class _ReqApptState extends State<ReqAppt> {
             )
           ],
         ),
-        drawer: const LeadingDrawer(reqApptRoute),
+        // drawer: const LeadingDrawer(reqApptRoute),
         endDrawer: EndDrawer(ptListController.currentPt.value.id),
         backgroundColor: Theme.of(context).primaryColor,
         body: WillPopScope(
@@ -135,11 +124,7 @@ class _ReqApptState extends State<ReqAppt> {
                     children: reqApptTiles,
                   ),
                 ),
-        ));
-    //     } else {
-    //       return const Center(child: CircularProgressIndicator());
-    //     }
-    //   },
-    // );
+        ),
+        bottomNavigationBar: const BottomNav(curIndex: 2));
   }
 }

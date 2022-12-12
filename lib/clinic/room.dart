@@ -73,7 +73,9 @@ class _RoomState extends State<Room> {
                   .where('active', isEqualTo: true)
                   .get();
               if (bbbs.docs.isNotEmpty) {
-                attachRoomRef.doc(bbbs.docs.first.id).update({'active': false});
+                for (var roomref in bbbs.docs) {
+                  attachRoomRef.doc(roomref.id).update({'active': false});
+                }
               }
             },
             child: const Text('Yes'),

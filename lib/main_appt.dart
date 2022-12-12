@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../common/color_extension.dart';
 import 'appt/noti_list.dart';
 import 'appt/create_pt.dart';
 import 'appt/app_owner.dart';
@@ -92,12 +93,103 @@ void main() async {
   runApp(const MyApp());
 }
 
+// Light High Contrast Theme
+// Generally for this version anything not white gets lighten by a percentage
+// ignore: avoid_redundant_argument_values
+final Color lightHighContrastPrimaryToneColor =
+    // ignore: avoid_redundant_argument_values
+    Colors.purple.shade50.lighten(10);
+// ignore: avoid_redundant_argument_values
+final Color lightHighContrastPrimaryColor = Colors.purple.shade200.lighten(10);
+// ignore: avoid_redundant_argument_values
+final Color lightHighContrastPrimaryVariantColor =
+    // ignore: avoid_redundant_argument_values
+    Colors.purple.shade700.lighten(10);
+// ignore: avoid_redundant_argument_values
+final Color lightHighContrastSecondaryToneColor =
+    // ignore: avoid_redundant_argument_values
+    Colors.teal.shade50.lighten(10);
+// ignore: avoid_redundant_argument_values
+final Color lightHighContrastSecondaryColor = Colors.teal.shade200.lighten(10);
+// ignore: avoid_redundant_argument_values
+final Color lightHighContrastSecondaryVariantColor =
+    // ignore: avoid_redundant_argument_values
+    Colors.teal.shade700.lighten(10);
+// ignore: avoid_redundant_argument_values
+final Color lightHighContrastErrorColor = Colors.red.shade700.lighten(10);
+const Color lightHighContrastBackgroundColor = Colors.white;
+const Color lightHighContrastSurfaceColor = Colors.white;
+
+const Color lightHighContrastOnPrimaryToneColor = Colors.black;
+const Color lightHighContrastOnPrimaryColor = Colors.black;
+const Color lightHighContrastOnPrimaryVariantColor = Colors.black;
+const Color lightHighContrastOnSecondaryToneColor = Colors.black;
+const Color lightHighContrastOnSecondaryColor = Colors.black;
+const Color lightHighContrastOnSecondaryVariantColor = Colors.black;
+const Color lightHighContrastOnSurfaceColor = Colors.black;
+const Color lightHighContrastOnBackgroundColor = Colors.black;
+const Color lightHighContrastOnErrorColor = Colors.black;
+
+
+// Light Palette Theme
+final Color lightPrimaryToneColor = Colors.purple.shade50;
+final Color lightPrimaryColor = Colors.purple.shade200;
+final Color lightPrimaryVariantColor = Colors.purple.shade700;
+final Color lightSecondaryToneColor = Colors.teal.shade50;
+final Color lightSecondaryColor = Colors.teal.shade200;
+final Color lightSecondaryVariantColor = Colors.teal.shade700;
+final Color lightErrorColor = Colors.red.shade700;
+const Color lightBackgroundColor = Colors.white;
+const Color lightSurfaceColor = Colors.white;
+
+const Color lightOnPrimaryToneColor = Colors.black;
+const Color lightOnPrimaryColor = Colors.black;
+const Color lightOnPrimaryVariantColor = Colors.black;
+const Color lightOnSecondaryToneColor = Colors.black;
+const Color lightOnSecondaryColor = Colors.black;
+const Color lightOnSecondaryVariantColor = Colors.black;
+const Color lightOnSurfaceColor = Colors.black;
+const Color lightOnBackgroundColor = Colors.black;
+const Color lightOnErrorColor = Colors.black;
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    ColorScheme appColorSchemeLightHighContrast = ColorScheme(
+      primary: lightHighContrastPrimaryColor,
+      primaryContainer: lightHighContrastPrimaryVariantColor,
+      secondary: lightHighContrastSecondaryColor,
+      secondaryContainer: lightHighContrastSecondaryVariantColor,
+      surface: lightHighContrastSurfaceColor,
+      background: lightHighContrastBackgroundColor,
+      error: lightHighContrastErrorColor,
+      onPrimary: lightHighContrastOnPrimaryColor,
+      onSecondary: lightHighContrastOnSecondaryColor,
+      onSurface: lightHighContrastOnSurfaceColor,
+      onBackground: lightHighContrastOnBackgroundColor,
+      onError: lightHighContrastOnErrorColor,
+      brightness: Brightness.light,
+    );
+
+    ColorScheme appColorSchemeLight = ColorScheme(
+      primary: lightPrimaryColor,
+      primaryVariant: lightPrimaryVariantColor,
+      secondary: lightSecondaryColor,
+      secondaryVariant: lightSecondaryVariantColor,
+      surface: lightSurfaceColor,
+      background: lightBackgroundColor,
+      error: lightErrorColor,
+      onPrimary: lightOnPrimaryColor,
+      onSecondary: lightOnSecondaryColor,
+      onSurface: lightOnSurfaceColor,
+      onBackground: lightOnBackgroundColor,
+      onError: lightOnErrorColor,
+      brightness: Brightness.light,
+    );
+
     return GetMaterialApp(
       key: const Key('Appt'),
       initialRoute: loginRoute,
@@ -133,11 +225,13 @@ class MyApp extends StatelessWidget {
         // scaffoldBackgroundColor: light,
         // textTheme: GoogleFonts.mulishTextTheme(Theme.of(context).textTheme)
         //     .apply(bodyColor: Colors.black),
+        // colorScheme: appColorSchemeLight,
         pageTransitionsTheme: const PageTransitionsTheme(builders: {
           TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
           TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
         }),
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.cyan,
+        // backgroundColor: lightHighContrastPrimaryVariantColor
       ),
       // home: Root(),
     );

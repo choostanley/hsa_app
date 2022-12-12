@@ -34,24 +34,25 @@ class _DrsnProfileState extends State<DrsnProfile> {
   Future<UserModel> getUserData() async {
     await drsnReqRef.doc(auth.currentUser!.uid).get().then((user) async {
       drsnController.initializeUserModel(user);
-
-      NotificationSettings settings = await messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        String? token = await messaging.getToken(
-          vapidKey: 'BPs5rY2FGfNzEu2Z83xGFJEoNEADAGIljrTads9JsHpPpl5HBf23Avgyar1LHEXIBEnqi3wvUHtS1bJQxsqjrsk'
+      if (await messaging.isSupported()) {
+        NotificationSettings settings = await messaging.requestPermission(
+          alert: true,
+          announcement: false,
+          badge: true,
+          carPlay: false,
+          criticalAlert: false,
+          provisional: false,
+          sound: true,
         );
-        drsnReqRef.doc(user.id).update({'mToken': token});
-      } else {
-        redSnackBar('Notification Failed',
-            'User declined or has not accepted permission');
+        if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+          String? token = await messaging.getToken(
+              vapidKey:
+                  'BPs5rY2FGfNzEu2Z83xGFJEoNEADAGIljrTads9JsHpPpl5HBf23Avgyar1LHEXIBEnqi3wvUHtS1bJQxsqjrsk');
+          drsnReqRef.doc(user.id).update({'mToken': token});
+        } else {
+          redSnackBar('Notification Failed',
+              'User declined or has not accepted permission');
+        }
       }
     });
     return userController.user;

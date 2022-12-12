@@ -9,6 +9,7 @@ import 'controllers/controllers.dart';
 import '/common/functions.dart';
 // import 'models/appt.dart';
 import 'models/pt_noti.dart';
+import 'widgets/bottom_nav.dart';
 import 'widgets/end_drawer.dart';
 import 'widgets/lead_drawer.dart';
 import 'package:intl/intl.dart';
@@ -16,22 +17,9 @@ import 'package:intl/intl.dart';
 import 'widgets/noti_listtile.dart';
 
 class NotiList extends StatelessWidget {
-//   const NotiList({super.key});
-
-//   @override
-//   // ignore: library_private_types_in_public_api
-//   _NotiListState createState() => _NotiListState();
-// }
-
-// class _NotiListState extends State<NotiList> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   NotiList({super.key});
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +28,10 @@ class NotiList extends StatelessWidget {
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text('noti'.tr),
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-          ),
+          // leading: IconButton(
+          //   icon: const Icon(Icons.menu),
+          //   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          // ),
           actions: [
             IconButton(
               icon: const Icon(
@@ -54,7 +42,7 @@ class NotiList extends StatelessWidget {
             )
           ],
         ),
-        drawer: const LeadingDrawer(notiListRoute),
+        // drawer: const LeadingDrawer(notiListRoute),
         endDrawer: EndDrawer(ptListController.currentPt.value.id),
         backgroundColor: Theme.of(context).primaryColor,
         body: WillPopScope(
@@ -94,6 +82,7 @@ class NotiList extends StatelessWidget {
                     case ConnectionState.done:
                       return const Text('Done. That\'s all');
                   }
-                })));
+                })),
+        bottomNavigationBar: const BottomNav(curIndex: 3));
   }
 }

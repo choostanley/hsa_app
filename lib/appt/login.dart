@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'controllers/controllers.dart';
 import '/common/functions.dart';
 import 'sign_up.dart';
+import 'package:get/get.dart';
+
+import 'widgets/end_drawer_login.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -18,6 +21,7 @@ class _LoginState extends State<Login> {
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -48,10 +52,21 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         title: const Text('Login - HSA Appt'),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.language,
+              size: 30,
+            ),
+            onPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
+          )
+        ],
       ),
+      endDrawer: const EndDrawerLogin(),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 500),
@@ -64,6 +79,10 @@ class _LoginState extends State<Login> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    Text('pt login'.tr,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
                     AutofillGroup(
                       child: TextFormField(
                         autofocus: true,
@@ -76,17 +95,15 @@ class _LoginState extends State<Login> {
                         validator: EmailValidator(
                             errorText: 'Please enter a valid email address'),
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
+                        decoration: InputDecoration(
+                          labelText: 'email'.tr,
                         ),
                         onFieldSubmitted: (v) {
                           FocusScope.of(context).requestFocus(focus);
-                        }, 
+                        },
                         // use this autofocus will go to next field - upon starting app only
                         // on hosting macam no problem
-                        autofillHints: const [
-                          AutofillHints.email
-                        ], 
+                        autofillHints: const [AutofillHints.email],
                         textInputAction: TextInputAction.next,
                         onEditingComplete: () =>
                             TextInput.finishAutofillContext(),
@@ -102,8 +119,8 @@ class _LoginState extends State<Login> {
                       validator: MinLengthValidator(6,
                           errorText: 'Password must be at least 6 digits long'),
                       decoration: InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Numbers only',
+                        labelText: 'password'.tr,
+                        hintText: 'no. only'.tr,
                         suffixIcon: IconButton(
                           icon: Icon(
                             _passwordVisible
@@ -120,7 +137,7 @@ class _LoginState extends State<Login> {
                       obscureText: !_passwordVisible,
                       onFieldSubmitted: (val) => _tryLogin(),
                       // !!! if include this line - inside appowner will call initState twice
-                      // autofillHints: const [AutofillHints.password], 
+                      // autofillHints: const [AutofillHints.password],
                     ),
                     const SizedBox(
                       height: 15,
@@ -129,14 +146,14 @@ class _LoginState extends State<Login> {
                     if (!_isLoading)
                       ElevatedButton(
                         onPressed: () => _tryLogin(),
-                        child: const Text('Login'),
+                        child: Text('login'.tr),
                       ),
                     if (!_isLoading)
                       TextButton(
                         style: TextButton.styleFrom(
                             foregroundColor: Theme.of(context).primaryColor),
                         onPressed: () => Get.to(const SignUp()),
-                        child: const Text('Create an account'),
+                        child: Text('create acc'.tr),
                       ),
                     // TextButton(
                     //   style: TextButton.styleFrom(

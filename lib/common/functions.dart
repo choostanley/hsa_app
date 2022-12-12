@@ -77,7 +77,7 @@ void blueSnackBar(String m0, String m1) {
 
 void purpleSnackBar(String m0, String m1) {
   Get.snackbar(m0, m1,
-      snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.purple);
+      snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.purpleAccent);
 }
 
 void topBlueSnackBar(String m0, String m1) {

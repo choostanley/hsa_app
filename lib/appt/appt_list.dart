@@ -6,6 +6,7 @@ import '../clinic/models/appt.dart';
 import 'controllers/controllers.dart';
 import '/common/functions.dart';
 // import 'models/appt.dart';
+import 'widgets/bottom_nav.dart';
 import 'widgets/end_drawer.dart';
 import 'widgets/lead_drawer.dart';
 import 'package:intl/intl.dart';
@@ -51,27 +52,16 @@ class _ApptListState extends State<ApptList> {
 
   @override
   Widget build(BuildContext context) {
-    // UserModel u = ac.getUserModel;
-    // var platform = Theme.of(context).platform;
     ptController.ctx = context;
-    // return
-    //     // Obx(() =>
-    //     FutureBuilder<List>(
-    //   future: getAllAppt(),
-    //   builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-    //     if (snapshot.hasError) {
-    //       return Center(child: Text(snapshot.error.toString()));
-    //     } else if (snapshot.connectionState == ConnectionState.done) {
-    //       // UserModel u = UserModel.fromSnapshot(snapshot.!data);
-    //       UserModel useHere = snapshot.data!;
+
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text('appt'.tr),
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-          ),
+          // leading: IconButton(
+          //   icon: const Icon(Icons.menu),
+          //   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          // ),
           actions: [
             IconButton(
                 icon: const Icon(Icons.refresh, size: 30),
@@ -85,7 +75,7 @@ class _ApptListState extends State<ApptList> {
             )
           ],
         ),
-        drawer: const LeadingDrawer(apptListRoute),
+        // drawer: const LeadingDrawer(apptListRoute),
         endDrawer: EndDrawer(ptListController.currentPt.value.id),
         backgroundColor: Theme.of(context).primaryColor,
         body: WillPopScope(
@@ -122,11 +112,7 @@ class _ApptListState extends State<ApptList> {
                     children: apptTiles,
                   ),
                 ),
-        ));
-    //     } else {
-    //       return const Center(child: CircularProgressIndicator());
-    //     }
-    //   },
-    // );
+        ),
+        bottomNavigationBar: const BottomNav(curIndex: 1));
   }
 }

@@ -12,7 +12,7 @@ class UserModel {
   late String email;
   late String ic;
   late String phoneNum;
-  late List<Appt> apptList;
+  // late List<Appt> apptList;
   late List<ApptReq> apptReqList;
   late DateTime createdAt;
   late DateTime updatedAt;

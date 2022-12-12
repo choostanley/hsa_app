@@ -64,6 +64,10 @@ class _LogincState extends State<Loginc> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    const Text('Clinician Login',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
                     AutofillGroup(
                       child: TextFormField(
                         autofocus: true,

@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:hsa_app/appt/helpers/routes.dart';
 import 'package:hsa_app/appt/models/pt_noti.dart';
 import 'package:hsa_app/appt/widgets/end_drawer.dart';
+import 'package:hsa_app/appt/widgets/noti_icon.dart';
 import 'package:hsa_app/appt/widgets/noti_listtile.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -255,11 +256,8 @@ class _AppOwnerState extends State<AppOwner> {
               key: _scaffoldKey,
               appBar: AppBar(
                 title: Text('app owner'.tr),
-                // leading: IconButton(
-                //   icon: const Icon(Icons.menu),
-                //   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                // ),
                 actions: [
+                  const NotiIcon(),
                   IconButton(
                     icon: const Icon(
                       Icons.person_add,
@@ -276,7 +274,6 @@ class _AppOwnerState extends State<AppOwner> {
                   )
                 ],
               ),
-              // drawer: const LeadingDrawer(ptProfileRoute),
               endDrawer: const EndDrawer(appOwnerRoute),
               backgroundColor: Theme.of(context).primaryColor,
               body: WillPopScope(
@@ -290,10 +287,14 @@ class _AppOwnerState extends State<AppOwner> {
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         collapsedBackgroundColor: Colors.white,
                         backgroundColor: Colors.white,
-                        title: Text('name'.tr + useHere.name,
+                        title: Text(
+                          // 'name'.tr + 
+                        useHere.name,
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
-                        subtitle: Text('ic no'.tr + useHere.ic,
+                        subtitle: Text(
+                          // 'ic no'.tr + 
+                          useHere.ic,
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                         children: [
@@ -392,63 +393,6 @@ class _AppOwnerState extends State<AppOwner> {
                       //   ),
                       // ),
                       const SizedBox(height: 10),
-                      // StreamBuilder<QuerySnapshot<Object?>>(
-                      //     stream: ptNotiRef
-                      //         .where('appOwnerId', isEqualTo: useHere.id)
-                      //         .snapshots(),
-                      //     builder: (BuildContext context,
-                      //         AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-                      //       switch (snapshot.connectionState) {
-                      //         case ConnectionState.none:
-                      //           return const Text('No Stream :(');
-                      //         // break;
-                      //         case ConnectionState.waiting:
-                      //           return const Text('Still Waiting...');
-                      //         // break;
-                      //         case ConnectionState.active:
-                      //           List<QueryDocumentSnapshot<Object?>> ss =
-                      //               snapshot.data!.docs;
-                      //           int unseen = ss
-                      //               .where((obj) => obj.get('seen') == false)
-                      //               .length;
-                      //           List<PtNoti> notis = ss
-                      //               .map((obj) => PtNoti.fromSnapshot(obj))
-                      //               .toList();
-                      //           notis.sort((a, b) =>
-                      //               b.createdAt.compareTo(a.createdAt));
-                      //           return Container(
-                      //             decoration: BoxDecoration(
-                      //               border: Border.all(
-                      //                   color: Colors.black, width: 1),
-                      //               borderRadius: BorderRadius.circular(10),
-                      //             ),
-                      //             child: ExpansionTile(
-                      //                 collapsedBackgroundColor: Colors.white,
-                      //                 backgroundColor: Colors.white,
-                      //                 title: Text(
-                      //                     'Unread Notifications = $unseen'),
-                      //                 children: [
-                      //                   ConstrainedBox(
-                      //                     constraints: const BoxConstraints(
-                      //                         minHeight: 0, maxHeight: 200),
-                      //                     child: ListView(
-                      //                       shrinkWrap: true,
-                      //                       children: notis
-                      //                           .map((noti) => NotiListTile(
-                      //                                 setColor: false,
-                      //                                 ptNoti: noti,
-                      //                                 key: Key(
-                      //                                     getRandomString(5)),
-                      //                               ))
-                      //                           .toList(),
-                      //                     ),
-                      //                   )
-                      //                 ]),
-                      //           );
-                      //         case ConnectionState.done:
-                      //           return const Text('Done. That\'s all');
-                      //       }
-                      //     }),
                       FutureBuilder(
                         future: ptListController.getPtModels(),
                         builder: (BuildContext context,

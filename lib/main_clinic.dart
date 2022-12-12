@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
           TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
           TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
         }),
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       // home: Root(),
     );

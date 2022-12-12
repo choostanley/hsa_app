@@ -33,7 +33,8 @@ class _EndDrawerState extends State<EndDrawer> {
       onTap: () => widget.currentPage == route
           ? Get.back()
           : off
-              ? Get.offAllNamed(route) // Get.offNamed(route) - no more back button
+              ? Get.offAllNamed(
+                  route) // Get.offNamed(route) - no more back button
               : Get.toNamed(route),
       tileColor: widget.currentPage == route
           ? Theme.of(context).primaryColorLight
@@ -105,11 +106,12 @@ class _EndDrawerState extends State<EndDrawer> {
               ListTile(
                 title: Text(
                   'directory'.tr,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 leading: const Icon(
                   Icons.map,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 tileColor: Theme.of(context).primaryColor,
               ),
@@ -124,8 +126,8 @@ class _EndDrawerState extends State<EndDrawer> {
                               color: Colors.black,
                               fontWeight: FontWeight.w500)),
                       const WidgetSpan(
-                        child:
-                            Icon(Icons.language, color: Colors.black, size: 18),
+                        child: Icon(Icons.language, // color: Colors.black,
+                            size: 18),
                       ),
                     ],
                   ),
@@ -133,7 +135,8 @@ class _EndDrawerState extends State<EndDrawer> {
                 children: [
                   langTile('en', 'US', 'English'),
                   langTile('ms', 'MY', 'Melayu'),
-                  langTile('zh', 'CN', '华语')
+                  langTile('zh', 'CN', '华语'),
+                  langTile('tm', 'IN', 'தமிழ்'),
                 ],
               ),
               produceTile(context, 'mpp'.tr, createPtRoute, true), // from false

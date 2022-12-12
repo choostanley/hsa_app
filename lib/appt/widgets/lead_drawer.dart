@@ -63,7 +63,7 @@ class _LeadingDrawerState extends State<LeadingDrawer> {
               ListTile(
                 title: Text(
                   'menu'.tr,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 tileColor: Theme.of(context).primaryColor,
               ),
