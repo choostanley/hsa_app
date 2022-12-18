@@ -17,6 +17,7 @@ const apptPageRoute = "/appt_page";
 const sentRefRoute = "/sent_ref";
 const roomsRoute = "/rooms";
 const membersRoute = "/members";
+const bluetoothRoute = "/bluetooth";
 // try no need to make AsRoomScreen route
 
 const notificationsRoute = "/notifications";

@@ -50,8 +50,11 @@ class _DrsnProfileState extends State<DrsnProfile> {
                   'BPs5rY2FGfNzEu2Z83xGFJEoNEADAGIljrTads9JsHpPpl5HBf23Avgyar1LHEXIBEnqi3wvUHtS1bJQxsqjrsk');
           drsnReqRef.doc(user.id).update({'mToken': token});
         } else {
-          redSnackBar('Notification Failed',
-              'User declined or has not accepted permission');
+          if (!drsnController.declinedNoti) {
+            purpleSnackBar('Notification Failed',
+                'User declined or has not accepted permission');
+            drsnController.declinedNoti = true;
+          }
         }
       }
     });

@@ -89,25 +89,25 @@ class _LeadingDrawerState extends State<LeadingDrawer> {
                 ),
                 tileColor: Theme.of(context).primaryColor,
               ),
-              produceTile(context, 'Clinic Profile', clinicProfileRoute),
+              produceTile(context, '1. Clinic Profile', clinicProfileRoute),
+              produceTile(context, '2. Manual Register Appt', regApptRoute),
               isApp || isWebMobile
-                  ? produceTile(context, 'Register Appt [SCAN]', scanApptRoute)
+                  ? produceTile(context, '2.1. Register Appt [SCAN]', scanApptRoute)
                   : Container(),
-              produceTile(context, 'Manual Register Appt', regApptRoute),
               // scan to get pt ptofile - then... make appt for him? send docs?
               // isApp
               //     ? produceTile(context, 'Pt Profile [SCAN]', scanPtRoute)
               //     : Container(),
               // produceTile(context, 'Pt search', searchPtRoute),
-              produceTile(context, 'Consultation Rooms', roomsRoute),
-              produceTile(context, 'Create Schedule', createScheduleRoute),
+              produceTile(context, '3. Consultation Rooms', roomsRoute),
+              produceTile(context, '4. Create Schedule', createScheduleRoute),
               FutureBuilder(
                 future: scheduleListController.getScheduleModels(),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<ScheduleModel>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return ExpansionTile(
-                      title: const Text('Schedules',
+                      title: const Text('5. Schedules',
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w500)),
@@ -120,10 +120,10 @@ class _LeadingDrawerState extends State<LeadingDrawer> {
                   }
                 },
               ),
-              produceTile(context, 'Received Referrals', receivedRefRoute),
+              produceTile(context, '6. Received Referrals', receivedRefRoute),
               // produceTile(context, 'Screened Referrals', screenedRefRoute),
               // produceTile(context, 'Sent Referrals', sentRefRoute),
-              produceTile(context, 'Members', membersRoute),
+              produceTile(context, '7. Colleagues', membersRoute),
               // produceTile(context, 'Time Table', tTableRoute),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hsa_app/clinic/bluetooth_test.dart';
 import 'clinic/appt_qr_camera.dart';
 import 'clinic/manual_reg_appt.dart';
 import 'clinic/members_page.dart';
@@ -114,6 +115,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: membersRoute, page: () => MembersPage()),
         GetPage(name: scanApptRoute, page: () => const ApptQrCamera()),
         GetPage(name: regApptRoute, page: () => const ManualRegAppt()),
+        GetPage(name: bluetoothRoute, page: () => const BluetoothTest()),
       ],
       debugShowCheckedModeBanner: false,
       title: 'HSA Clinic',

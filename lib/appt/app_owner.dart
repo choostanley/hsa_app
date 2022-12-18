@@ -88,8 +88,11 @@ class _AppOwnerState extends State<AppOwner> {
             AuthorizationStatus.provisional) {
           blueSnackBar('Provisional Notification', '~~~~~~~~');
         } else {
-          purpleSnackBar('Notification Failed',
-              'User declined or has not accepted permission');
+          if (!ptController.declinedNoti) {
+            purpleSnackBar('Notification Failed',
+                'User declined or has not accepted permission');
+            ptController.declinedNoti = true;
+          }
         }
       }
     });
@@ -288,13 +291,13 @@ class _AppOwnerState extends State<AppOwner> {
                         collapsedBackgroundColor: Colors.white,
                         backgroundColor: Colors.white,
                         title: Text(
-                          // 'name'.tr + 
-                        useHere.name,
+                            // 'name'.tr +
+                            useHere.name,
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                         subtitle: Text(
-                          // 'ic no'.tr + 
-                          useHere.ic,
+                            // 'ic no'.tr +
+                            useHere.ic,
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                         children: [
@@ -307,7 +310,7 @@ class _AppOwnerState extends State<AppOwner> {
                                 Text('hp no'.tr + useHere.phoneNum,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
-                                Text('email'.tr + useHere.email,
+                                Text('email:'.tr + useHere.email,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 8),

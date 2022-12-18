@@ -32,6 +32,7 @@ class PtController extends GetxController {
   late firebase_storage.Reference storageRef;
   bool remindCompleteRegistration = false;
   List<String> icList = [];
+  bool declinedNoti = false;
 
   late Future<DocumentSnapshot> getUserFuture;
   bool inited = false;

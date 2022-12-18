@@ -37,6 +37,7 @@ class DrsnController extends GetxController {
 
   late Future<DocumentSnapshot> getUserFuture;
   bool inited = false;
+  bool declinedNoti = false;
   // apparently getx controller has a initialized bool
 
   User? get user => _firebaseUser.value;
