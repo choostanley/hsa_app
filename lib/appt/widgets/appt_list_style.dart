@@ -16,8 +16,7 @@ class ApptListStyle extends StatelessWidget {
   List<Container> getApptToday() {
     List<Container> todayAppt = [];
     List<Appt> todayApp = apptController.appts
-        .where((appt) =>
-            DateTime.fromMillisecondsSinceEpoch(appt.dateTimeStamp).isToday())
+        .where((appt) => appt.dateTimeStamp.isToday())
         .toList();
     for (var apt in todayApp) {
       todayAppt.add(Container(
@@ -33,8 +32,8 @@ class ApptListStyle extends StatelessWidget {
           // ),
           // tileColor: Colors.white,
           title: Text(apt.clinicName),
-          subtitle: Text(DateFormat('dd/MM/yyyy kk:mm')
-              .format(DateTime.fromMillisecondsSinceEpoch(apt.dateTimeStamp))),
+          subtitle:
+              Text(DateFormat('dd/MM/yyyy kk:mm').format(apt.dateTimeStamp)),
         ),
       ));
     }

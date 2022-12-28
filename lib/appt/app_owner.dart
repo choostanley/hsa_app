@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:hsa_app/appt/helpers/routes.dart';
+import 'package:hsa_app/appt/models/holiday.dart';
 import 'package:hsa_app/appt/models/pt_noti.dart';
 import 'package:hsa_app/appt/widgets/end_drawer.dart';
 import 'package:hsa_app/appt/widgets/noti_icon.dart';
@@ -24,6 +25,7 @@ import 'models/user.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
+import "package:collection/collection.dart";
 
 import 'widgets/pt_tile.dart';
 
@@ -65,6 +67,71 @@ class _AppOwnerState extends State<AppOwner> {
     // after commenting this line,
     // initState reduced to being called 2 times from 3 times
     super.initState();
+  }
+
+  void getHoliday(double height) async {
+    QuerySnapshot<Object?> holidays = await holidayRef.get();
+    if (holidays.docs.isNotEmpty) {
+      List<Holiday> hols =
+          holidays.docs.map((hoho) => Holiday.fromSnapshot(hoho)).toList();
+      Map<String, List<Holiday>> newMap =
+          groupBy(hols, (Holiday obj) => obj.clinicName);
+      String main = '';
+      List<Widget> dialogBod = [];
+      for (var clinicName in newMap.keys) {
+        main += '$clinicName\n';
+        dialogBod.add(Text(
+          clinicName,
+          style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline),
+        ));
+        if (gotPresent(newMap[clinicName]!)) {
+          for (var hol in newMap[clinicName]!) {
+            if (hol.getLatest().isAfter(DateTime.now())) {
+              main += '${hol.holidayName} - ${hol.getTimeFrame()}\n';
+              dialogBod.add(RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                        text: hol.holidayName,
+                        style: const TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w500)),
+                    TextSpan(
+                        text: ' - ${hol.getTimeFrame()}',
+                        style: const TextStyle(color: Colors.black)),
+                  ],
+                ),
+              ));
+            }
+          }
+          dialogBod.add(const Text(''));
+          main += '\n';
+        }
+      }
+      Get.defaultDialog(
+        contentPadding: const EdgeInsets.all(15.0),
+        barrierDismissible: true,
+        title: 'Public Holiday Alert',
+        content: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: height * 0.7,
+          ),
+          child: ListView(shrinkWrap: true, children: dialogBod // [Text(main)],
+              ),
+        ),
+      );
+      ptController.informedHoliday = true;
+    }
+  }
+
+  bool gotPresent(List<Holiday> listHol) {
+    for (var hol in listHol) {
+      if (hol.getLatest().isAfter(DateTime.now())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Future<UserModel> getUserData() async {
@@ -245,6 +312,8 @@ class _AppOwnerState extends State<AppOwner> {
     // UserModel u = ac.getUserModel;
     // var platform = Theme.of(context).platform;
     ptController.ctx = context;
+    var height = MediaQuery.of(context).size.height;
+    if (!ptController.informedHoliday) getHoliday(height);
     return
         // Obx(() =>
         FutureBuilder<UserModel>(
@@ -261,6 +330,7 @@ class _AppOwnerState extends State<AppOwner> {
                 title: Text('app owner'.tr),
                 actions: [
                   const NotiIcon(),
+                  const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(
                       Icons.person_add,
@@ -302,7 +372,8 @@ class _AppOwnerState extends State<AppOwner> {
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
+                            padding:
+                                const EdgeInsets.only(left: 15.0, right: 15.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

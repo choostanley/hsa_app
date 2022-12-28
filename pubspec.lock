@@ -1149,7 +1149,7 @@ packages:
     source: hosted
     version: "2.1.3"
   timeago:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: timeago
       url: "https://pub.dartlang.org"

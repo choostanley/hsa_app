@@ -83,7 +83,7 @@ class _EndDrawerState extends State<EndDrawer> {
                 ),
                 tileColor: Theme.of(context).primaryColor,
               ),
-              produceTile(context, 'BlueTooth', bluetoothRoute),
+              // produceTile(context, 'BlueTooth', bluetoothRoute),
               produceTile(context, 'Dr/Sn Profile', drsnProfileRoute),
               produceTile(context, 'Create Clinic', createClinicRoute),
               FutureBuilder(

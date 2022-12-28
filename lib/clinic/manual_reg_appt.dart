@@ -107,15 +107,16 @@ class _ManualRegApptState extends State<ManualRegAppt> {
       'seen': false,
       'clinicId': currentClinic.id,
       'title': currentClinic.name,
-      'body': '${getAppt.ptName} in ${getAppt.scheduleName} queue.',
+      'body': 'Registered ${getAppt.ptName} in ${getAppt.scheduleName} queue.',
       'createdAt': now,
       'updatedAt': now,
     });
     sendPushMessageToPt(mToken, currentClinic.name,
-        '${getAppt.ptName} in ${getAppt.scheduleName} queue.');
-    apptRef.doc(getAppt.id).update({'attended': true}).then((_) {
-      // fullAppt.removeWhere((appt) => appt.ptIc == ptIc);
-    });
+        'Registered ${getAppt.ptName} in ${getAppt.scheduleName} queue.');
+    apptRef.doc(getAppt.id).update({'attended': true});
+    // .then((_) {
+    // fullAppt.removeWhere((appt) => appt.ptIc == ptIc);
+    // });
     greenSnackBar(getAppt.scheduleName, getAppt.ptName);
   }
 
@@ -159,240 +160,159 @@ class _ManualRegApptState extends State<ManualRegAppt> {
                   )));
             } else if (snapshot.connectionState == ConnectionState.done) {
               return Center(
-                      child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 500),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              // mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text('Today\'s Appointment',
-                                    style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold)),
-                                const SizedBox(height: 8),
-                                TextFormField(
-                                  key: const ValueKey('ic'),
-                                  keyboardType: TextInputType.number,
-                                  controller: localIc,
-                                  decoration: InputDecoration(
-                                      labelText: 'Patient IC',
-                                      suffixIcon: IconButton(
-                                        icon: const Icon(Icons.search),
-                                        onPressed: () {
-                                          if (localIc.text.isNotEmpty) {
-                                            fullAppt.sort((a, b) {
-                                              if (a.ptIc.startsWith(
-                                                  localIc.text.trim())) {
-                                                return -1;
-                                              }
-                                              if (b.ptIc.startsWith(
-                                                  localIc.text.trim())) {
-                                                return 1;
-                                              }
-                                              return a.dateTimeStamp
-                                                  .compareTo(b.dateTimeStamp);
-                                            });
+                  child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 500),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          // mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text('Today\'s Appointment',
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              key: const ValueKey('ic'),
+                              keyboardType: TextInputType.number,
+                              controller: localIc,
+                              decoration: InputDecoration(
+                                  labelText: 'Patient IC',
+                                  suffixIcon: IconButton(
+                                    icon: const Icon(Icons.search),
+                                    onPressed: () {
+                                      if (localIc.text.isNotEmpty) {
+                                        fullAppt.sort((a, b) {
+                                          if (a.ptIc.startsWith(
+                                              localIc.text.trim())) {
+                                            return -1;
                                           }
-                                        },
-                                      )),
-                                  // onSaved: (value) {
-                                  //   localIc.text = value!.trim();
-                                  // },
-                                  onChanged: (String sth) {
-                                    if (sth.isNotEmpty) {
-                                      fullAppt.sort((a, b) {
-                                        if (a.ptIc.startsWith(sth.trim())) {
-                                          return -1;
-                                        }
-                                        if (b.ptIc.startsWith(sth.trim())) {
-                                          return 1;
-                                        }
-                                        return a.dateTimeStamp
-                                            .compareTo(b.dateTimeStamp);
-                                      });
-                                      setState(() {});
-                                    }
-                                  },
-                                ),
-                                const SizedBox(height: 10),
-                                StreamBuilder<QuerySnapshot<Object?>>(
-                                    stream: scIds.isNotEmpty
-                                        ? apptRef
-                                            .where('scheduleId', whereIn: scIds)
-                                            .where('dateString',
-                                                isEqualTo:
-                                                    getDate(DateTime.now()))
-                                            .where('active', isEqualTo: true)
-                                            .where('attended', isEqualTo: false)
-                                            .snapshots()
-                                        : apptRef
-                                            .where('scheduleId', isEqualTo: '')
-                                            .snapshots(),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<QuerySnapshot<Object?>>
-                                            snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.none:
-                                          return const Text('No Stream :(');
-                                        // break;
-                                        case ConnectionState.waiting:
-                                          return const Text('Still Waiting...');
-                                        // break;
-                                        case ConnectionState.active:
-                                          List<QueryDocumentSnapshot<Object?>>
-                                              ss = snapshot.data!.docs;
-                                          fullAppt = ss
-                                              .map((sAppt) =>
-                                                  Appt.fromSnapshot(sAppt))
-                                              .toList();
-                                          if (localIc.text.isNotEmpty) {
-                                            fullAppt.sort((a, b) {
-                                              if (a.ptIc.startsWith(
-                                                  localIc.text.trim())) {
-                                                return -1;
-                                              }
-                                              if (b.ptIc.startsWith(
-                                                  localIc.text.trim())) {
-                                                return 1;
-                                              }
-                                              return a.dateTimeStamp
-                                                  .compareTo(b.dateTimeStamp);
-                                            });
-                                          } else {
-                                            fullAppt.sort((a, b) => a
-                                                .dateTimeStamp
-                                                .compareTo(b.dateTimeStamp));
+                                          if (b.ptIc.startsWith(
+                                              localIc.text.trim())) {
+                                            return 1;
                                           }
-                                          return ListView.builder(
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.vertical,
-                                              itemCount: fullAppt.length,
-                                              itemBuilder: (context, index) {
-                                                return Container(
-                                                  margin:
-                                                      const EdgeInsets.all(2),
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)),
-                                                  child: ListTile(
-                                                    title: Text(
-                                                        fullAppt[index].ptName,
-                                                        overflow: TextOverflow
-                                                            .ellipsis),
-                                                    subtitle: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Text(fullAppt[index]
-                                                            .ptIc),
-                                                        Text(
-                                                            '${fullAppt[index].scheduleName} ${DateFormat("HH:mm").format(DateTime.fromMillisecondsSinceEpoch(fullAppt[index].dateTimeStamp))}'),
-                                                        // Text( DateForma),
-                                                      ],
-                                                    ),
-                                                    isThreeLine: true,
-                                                    // dense: true,
-                                                    trailing: IconButton(
-                                                      icon: const Icon(
-                                                          Icons
-                                                              .check_box_outlined,
-                                                          size: 35,
-                                                          color: Colors
-                                                              .blueAccent),
-                                                      onPressed: () =>
-                                                          processApptId(
-                                                              fullAppt[index]
-                                                                  .id),
-                                                    ),
-                                                  ),
-                                                );
-                                              });
-                                        // break;
-                                        case ConnectionState.done:
-                                          return const Text(
-                                              'Done. That\'s all');
-                                        // break;
+                                          return a.dateTimeStamp
+                                              .compareTo(b.dateTimeStamp);
+                                        });
                                       }
-                                    })
-                                // ListView.builder(
-                                //   shrinkWrap: true,
-                                //   itemBuilder:
-                                //       (BuildContext context, int index) {
-                                //     ScheduleModel nowie = localScList[index];
-                                //     return Container(
-                                //       margin: const EdgeInsets.only(right: 2),
-                                //       decoration: BoxDecoration(
-                                //           border: Border.all(),
-                                //           borderRadius:
-                                //               BorderRadius.circular(5)),
-                                //       width: 150,
-                                //       child: RadioListTile<String>(
-                                //         selected: generalScId == nowie.id,
-                                //         title: Text(nowie.name,
-                                //             overflow: TextOverflow.ellipsis),
-                                //         value: nowie.id,
-                                //         groupValue: generalScId,
-                                //         dense: true,
-                                //         visualDensity: const VisualDensity(
-                                //             horizontal: -3, vertical: -3),
-                                //         onChanged: (String? value) async {
-                                //           // generalScId = value!;
-                                //           // calender = await createCalender(generalScId);
-                                //           setState(() {
-                                //             generalScId = value!;
-                                //             // chosedSm = value;
-                                //           });
-                                //         },
-                                //       ),
-                                //     );
-                                //   },
-                                // )
-                              ],
+                                    },
+                                  )),
+                              // onSaved: (value) {
+                              //   localIc.text = value!.trim();
+                              // },
+                              onChanged: (String sth) {
+                                if (sth.isNotEmpty) {
+                                  fullAppt.sort((a, b) {
+                                    if (a.ptIc.startsWith(sth.trim())) {
+                                      return -1;
+                                    }
+                                    if (b.ptIc.startsWith(sth.trim())) {
+                                      return 1;
+                                    }
+                                    return a.dateTimeStamp
+                                        .compareTo(b.dateTimeStamp);
+                                  });
+                                  setState(() {});
+                                }
+                              },
                             ),
-                          )))
-
-                  // Stack(
-                  //     alignment: FractionalOffset.bottomCenter,
-                  //     children: <Widget>[
-                  //       Positioned.fill(
-                  //         child: MobileScanner(
-                  //             allowDuplicates: false,
-                  //             controller: MobileScannerController(
-                  //                 facing: CameraFacing.back, torchEnabled: false),
-                  //             onDetect: (barcode, args) async {
-                  //               if (!kIsWeb && hasVibrator) {
-                  //                 Vibration.vibrate();
-                  //               } else {
-                  //                 HapticFeedback.lightImpact();
-                  //               }
-                  //               if (barcode.rawValue == null) {
-                  //                 redSnackBar(
-                  //                     'Failed to scan Barcode', 'Try Again');
-                  //               } else {
-                  //                 final String code = barcode.rawValue!;
-                  //                 // debugPrint('Barcode found! $code');
-                  //                 greenSnackBar('Success', code);
-                  //                 processPtIc(code);
-                  //               }
-                  //             }),
-                  //       ),
-                  //       Positioned(
-                  //         width: 60,
-                  //         height: 40,
-                  //         bottom: 40,
-                  //         child: ElevatedButton(
-                  //             child: const Icon(Icons.refresh),
-                  //             onPressed: () => getTodayAppts()),
-                  //       )
-                  //     ])
-
-                  ;
+                            const SizedBox(height: 10),
+                            StreamBuilder<QuerySnapshot<Object?>>(
+                                stream: scIds.isNotEmpty
+                                    ? apptRef
+                                        .where('scheduleId', whereIn: scIds)
+                                        .where('dateString',
+                                            isEqualTo: getDate(DateTime.now()))
+                                        .where('active', isEqualTo: true)
+                                        .where('attended', isEqualTo: false)
+                                        .snapshots()
+                                    : apptRef
+                                        .where('scheduleId', isEqualTo: '')
+                                        .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot<Object?>>
+                                        snapshot) {
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
+                                      return const Text('No Stream :(');
+                                    // break;
+                                    case ConnectionState.waiting:
+                                      return const Text('Still Waiting...');
+                                    // break;
+                                    case ConnectionState.active:
+                                      List<QueryDocumentSnapshot<Object?>> ss =
+                                          snapshot.data!.docs;
+                                      fullAppt = ss
+                                          .map((sAppt) =>
+                                              Appt.fromSnapshot(sAppt))
+                                          .toList();
+                                      if (localIc.text.isNotEmpty) {
+                                        fullAppt.sort((a, b) {
+                                          if (a.ptIc.startsWith(
+                                              localIc.text.trim())) {
+                                            return -1;
+                                          }
+                                          if (b.ptIc.startsWith(
+                                              localIc.text.trim())) {
+                                            return 1;
+                                          }
+                                          return a.dateTimeStamp
+                                              .compareTo(b.dateTimeStamp);
+                                        });
+                                      } else {
+                                        fullAppt.sort((a, b) => a.dateTimeStamp
+                                            .compareTo(b.dateTimeStamp));
+                                      }
+                                      return ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: fullAppt.length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              margin: const EdgeInsets.all(2),
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: ListTile(
+                                                title: Text(
+                                                    fullAppt[index].ptName,
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                                subtitle: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(fullAppt[index].ptIc),
+                                                    Text(
+                                                        '${fullAppt[index].scheduleName} ${DateFormat("HH:mm").format(fullAppt[index].dateTimeStamp)}'),
+                                                    // Text( DateForma),
+                                                  ],
+                                                ),
+                                                isThreeLine: true,
+                                                // dense: true,
+                                                trailing: IconButton(
+                                                  icon: const Icon(
+                                                      Icons.check_box_outlined,
+                                                      size: 35,
+                                                      color: Colors.blueAccent),
+                                                  onPressed: () =>
+                                                      processApptId(
+                                                          fullAppt[index].id),
+                                                ),
+                                              ),
+                                            );
+                                          });
+                                    // break;
+                                    case ConnectionState.done:
+                                      return const Text('Done. That\'s all');
+                                    // break;
+                                  }
+                                })
+                          ],
+                        ),
+                      )));
             } else {
               return const Center(child: CircularProgressIndicator());
             }

@@ -3,6 +3,7 @@ import 'package:hsa_app/appt/models/pt_noti.dart';
 import 'package:hsa_app/common/firebase/firebase_const.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../common/functions.dart';
 
@@ -48,8 +49,9 @@ class _NotiListTileState extends State<NotiListTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(widget.ptNoti.body, overflow: TextOverflow.ellipsis),
-                  Text(DateFormat('dd-MM-yyyy kk:mm')
-                      .format(widget.ptNoti.createdAt)),
+                  // Text(DateFormat('dd-MM-yyyy kk:mm')
+                  //     .format(widget.ptNoti.createdAt)),
+                  Text(timeago.format(widget.ptNoti.createdAt)),
                 ],
               ),
               trailing: widget.ptNoti.seen

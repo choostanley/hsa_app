@@ -85,13 +85,10 @@ class DayModel {
   Future<List<HourModel>> getHourModelList(ScheduleDay sDay) async {
     if (isHoliday) return [];
     if (hoursInitiated) {
-      print('initiated');
-      print(hours.length);
       return hours;
     } else {
       QuerySnapshot<Object?> hourObjs =
           await hourRef.where('dayId', isEqualTo: id).get();
-      print(hourObjs.docs.length);
       if (hourObjs.docs.isEmpty) {
         hours = await createHours(sDay);
       } else {

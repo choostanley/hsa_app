@@ -12,7 +12,8 @@ class Appt {
   late String clinicId;
   late String clinicName;
   late String dateString;
-  late int dateTimeStamp;
+  late int dateTimeStampInt;
+  late DateTime dateTimeStamp;
   // inside queue need scheduleId
   // first of all - how to check if pt is in any schedule...
   // take all appt under schedules under current clinic
@@ -49,7 +50,8 @@ class Appt {
       clinicId = snapshot.get('clinicId');
       clinicName = snapshot.get('clinicName');
       dateString = snapshot.get('dateString');
-      dateTimeStamp = snapshot.get('dateTimeStamp');
+      dateTimeStampInt = snapshot.get('dateTimeStampInt');
+      dateTimeStamp = DateTime.fromMillisecondsSinceEpoch(dateTimeStampInt);
       staffId = snapshot.get('staffId');
       apptReqId = snapshot.get('apptReqId');
       approveRemarks = snapshot.get('approveRemarks');
@@ -78,7 +80,8 @@ class Appt {
       clinicId = map['clinicId'];
       clinicName = map['clinicName'];
       dateString = map['dateString'];
-      dateTimeStamp = map['dateTimeStamp'];
+      dateTimeStampInt = map['dateTimeStampInt'];
+      dateTimeStamp = DateTime.fromMillisecondsSinceEpoch(dateTimeStampInt);
       staffId = map['staffId'];
       apptReqId = map['apptReqId'];
       approveRemarks = map['approveRemarks'];
@@ -88,7 +91,7 @@ class Appt {
       updatedAt = DateTime.fromMillisecondsSinceEpoch(map['updatedAt']);
       hrId = map['hrId'];
     } catch (error) {
-      redSnackBar('Error retrieving schedule data', error.toString());
+      redSnackBar('Error retrieving Appt data', error.toString());
     }
   }
 }

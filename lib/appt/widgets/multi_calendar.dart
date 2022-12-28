@@ -81,7 +81,7 @@ class _MultiCalendarState extends State<MultiCalendar> {
             // formatButtonVisible: false,
             // titleTextStyle: TextStyle(fontSize: MediaQuery.of(context).size.width*0.007)
           ),
-          eventLoader: _getEventsForDay,
+          // eventLoader: _getEventsForDay,
           startingDayOfWeek: StartingDayOfWeek.sunday,
           selectedDayPredicate: (day) {
             // Use values from Set to mark multiple days as selected

@@ -8,7 +8,7 @@ class QueueModel {
   late String ptName;
   late String scheduleId;
   late String calledById; // - doctor
-  late String approveRemarks;
+  late String approveRemarks; // so that calling dr knows little bit on case
   late bool called;
   late bool entered;
   late DateTime createdAt;
@@ -23,7 +23,7 @@ class QueueModel {
       ptName = snapshot.get('ptName');
       scheduleId = snapshot.get('scheduleId');
       calledById = snapshot.get('calledById');
-      approveRemarks = snapshot.get('approveRemarks');
+      approveRemarks = snapshot.get('approveRemarks'); 
       called = snapshot.get('called');
       entered = snapshot.get('entered');
       createdAt =

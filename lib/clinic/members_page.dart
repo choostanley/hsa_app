@@ -26,7 +26,7 @@ class MembersPage extends StatelessWidget {
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: const Text('Members'),
+          title: const Text('Colleagues'),
           leading: IconButton(
             icon: const Icon(Icons.local_hospital, size: 30),
             onPressed: () => _scaffoldKey.currentState?.openDrawer(),
@@ -82,37 +82,39 @@ class MembersPage extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ListView(
-                                  children: members
-                                      .map((memb) => ListTile(
-                                            shape: RoundedRectangleBorder(
-                                              side: const BorderSide(
-                                                  color: Colors.black,
-                                                  width: 1),
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                            ),
-                                            title: Text(memb.drSnName),
-                                            tileColor: Colors.white,
-                                            key: Key(getRandomString(5)),
-                                            leading: CircleAvatar(
-                                              child: ClipOval(
-                                                child: kIsWeb
-                                                    ? Image.network(
-                                                        'https://www.drugs.com/health-guide/images/ddca3f92-4b8e-4672-bb6b-f3594ad4e304.jpg',
-                                                        fit: BoxFit.cover,
-                                                        width: 100,
-                                                        height: 100,
-                                                      )
-                                                    : CachedNetworkImage(
-                                                        width: 100,
-                                                        height: 100,
-                                                        fit: BoxFit.cover,
-                                                        imageUrl:
-                                                            'https://www.drugs.com/health-guide/images/ddca3f92-4b8e-4672-bb6b-f3594ad4e304.jpg'),
-                                              ),
-                                            ),
-                                          ))
-                                      .toList(),
+                                  children: members.map((memb) {
+                                    String self =
+                                        memb.drSnIc == userController.user.ic
+                                            ? ' (self)'
+                                            : '';
+                                    return ListTile(
+                                      shape: RoundedRectangleBorder(
+                                        side: const BorderSide(
+                                            color: Colors.black, width: 1),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      title: Text(memb.drSnName + self),
+                                      tileColor: Colors.white,
+                                      key: Key(getRandomString(5)),
+                                      leading: CircleAvatar(
+                                        child: ClipOval(
+                                          child: kIsWeb
+                                              ? Image.network(
+                                                  'https://www.drugs.com/health-guide/images/ddca3f92-4b8e-4672-bb6b-f3594ad4e304.jpg',
+                                                  fit: BoxFit.cover,
+                                                  width: 100,
+                                                  height: 100,
+                                                )
+                                              : CachedNetworkImage(
+                                                  width: 100,
+                                                  height: 100,
+                                                  fit: BoxFit.cover,
+                                                  imageUrl:
+                                                      'https://www.drugs.com/health-guide/images/ddca3f92-4b8e-4672-bb6b-f3594ad4e304.jpg'),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                               )));
                     case ConnectionState.done:

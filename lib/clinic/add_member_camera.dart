@@ -42,8 +42,6 @@ class _AddMemberCameraState extends State<AddMemberCamera> {
   late List<String> memberIds;
 
   Future<void> getTodayAppts() async {
-    // List<ScheduleModel> scModels =
-    //     await scheduleListController.getScheduleModels();
     QuerySnapshot<Object?> memberObjs = await memberRef
         .where('clinicId', isEqualTo: clinicListController.currentCl.value.id)
         .get();

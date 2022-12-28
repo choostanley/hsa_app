@@ -6,6 +6,7 @@ import '../clinic/models/appt.dart';
 import 'controllers/controllers.dart';
 import '/common/functions.dart';
 // import 'models/appt.dart';
+import 'view_appt.dart';
 import 'widgets/bottom_nav.dart';
 import 'widgets/end_drawer.dart';
 import 'widgets/lead_drawer.dart';
@@ -44,7 +45,8 @@ class _ApptListState extends State<ApptList> {
         tileColor: Colors.white,
         title: Text(apt.clinicName),
         subtitle: Text(DateFormat('dd-MM-yyyy kk:mm')
-            .format(DateTime.fromMillisecondsSinceEpoch(apt.dateTimeStamp))),
+            .format(apt.dateTimeStamp)),
+        onTap: () => Get.to(ViewAppt(apt: apt)),
       ));
     }
     return allAppt;

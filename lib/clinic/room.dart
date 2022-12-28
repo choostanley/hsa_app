@@ -54,37 +54,69 @@ class _RoomState extends State<Room> {
   }
 
   Future<bool> exitRoomPop(BuildContext context) async {
-    final shouldPop = await showDialog(
+    // final shouldPop = await showDialog(
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     title: const Text('Are you sure?'),
+    //     content: const Text('Do you want to leave this ROOM ?'),
+    //     actions: <Widget>[
+    //       TextButton(
+    //         onPressed: () => Navigator.of(context).pop(false),
+    //         child: const Text('No'),
+    //       ),
+    //       TextButton(
+    //         onPressed: () async {
+    //           Navigator.of(context).pop(true);
+    //           QuerySnapshot<Object?> bbbs = await attachRoomRef
+    //               .where('roomId', isEqualTo: localRoom.id)
+    //               .where('staffId', isEqualTo: userController.user.id)
+    //               .where('active', isEqualTo: true)
+    //               .get();
+    //           if (bbbs.docs.isNotEmpty) {
+    //             for (var roomref in bbbs.docs) {
+    //               attachRoomRef.doc(roomref.id).update({'active': false});
+    //             }
+    //           }
+    //         },
+    //         child: const Text('Yes'),
+    //       ),
+    //     ],
+    //   ),
+    // );
+    showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Are you sure?'),
-        content: const Text('Do you want to leave this ROOM ?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                CircularProgressIndicator(),
+                SizedBox(
+                  height: 10,
+                ),
+                // Text("Loading"),
+              ],
+            ),
           ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop(true);
-              QuerySnapshot<Object?> bbbs = await attachRoomRef
-                  .where('roomId', isEqualTo: localRoom.id)
-                  .where('staffId', isEqualTo: userController.user.id)
-                  .where('active', isEqualTo: true)
-                  .get();
-              if (bbbs.docs.isNotEmpty) {
-                for (var roomref in bbbs.docs) {
-                  attachRoomRef.doc(roomref.id).update({'active': false});
-                }
-              }
-            },
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
+        );
+      },
     );
-
-    return shouldPop ?? false;
+    QuerySnapshot<Object?> bbbs = await attachRoomRef
+        .where('roomId', isEqualTo: localRoom.id)
+        .where('staffId', isEqualTo: userController.user.id)
+        .where('active', isEqualTo: true)
+        .get();
+    if (bbbs.docs.isNotEmpty) {
+      for (var roomref in bbbs.docs) {
+        attachRoomRef.doc(roomref.id).update({'active': false});
+      }
+    }
+    if (mounted) Navigator.pop(context);
+    return true;
+    // shouldPop ?? false;
   }
 
   @override
@@ -129,6 +161,37 @@ class _RoomState extends State<Room> {
                             return const CircularProgressIndicator();
                           }
                         },
+                      ),
+                      const SizedBox(height: 5),
+                      RichText(
+                        text: const TextSpan(
+                          children: [
+                            WidgetSpan(
+                              child: Icon(Icons.call,
+                                  color: Colors.green, size: 18),
+                            ),
+                            TextSpan(
+                                text: ' - In queue',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: const TextSpan(
+                          children: [
+                            WidgetSpan(
+                              child: Icon(Icons.call,
+                                  color: Colors.grey, size: 18),
+                            ),
+                            TextSpan(
+                                text: ' - Called',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500)),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 5),
                       SizedBox(
@@ -205,6 +268,10 @@ class _RoomState extends State<Room> {
                                       itemBuilder: (context, index) {
                                         QueueModel qq =
                                             QueueModel.fromSnapshot(ss[index]);
+                                        String called = qq.createdAt ==
+                                                qq.updatedAt
+                                            ? ''
+                                            : ', Called: ${DateFormat("kk:mm").format(qq.updatedAt)}H';
                                         return Container(
                                           margin:
                                               const EdgeInsets.only(right: 2),
@@ -217,8 +284,20 @@ class _RoomState extends State<Room> {
                                             title: Text(qq.ptName,
                                                 overflow:
                                                     TextOverflow.ellipsis),
-                                            subtitle: Text(qq.approveRemarks),
+                                            subtitle: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(qq.approveRemarks,
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                                Text(
+                                                    'Register: ${DateFormat("kk:mm").format(qq.createdAt)}H$called'),
+                                              ],
+                                            ),
                                             dense: true,
+                                            isThreeLine: true,
                                             leading: IconButton(
                                               icon: const Icon(Icons.call,
                                                   size: 30),

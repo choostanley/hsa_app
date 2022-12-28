@@ -33,6 +33,7 @@ class PtController extends GetxController {
   bool remindCompleteRegistration = false;
   List<String> icList = [];
   bool declinedNoti = false;
+  bool informedHoliday = false;
 
   late Future<DocumentSnapshot> getUserFuture;
   bool inited = false;

@@ -68,6 +68,7 @@ class _CreateScheduleState extends State<CreateSchedule>
   DateTime timely = DateTime.now();
   final ScrollController _scrollController = ScrollController();
   DateTime timeHolder = DateTime.now();
+  int dayNumWithIssue = 0;
 
   @override
   void initState() {
@@ -102,11 +103,13 @@ class _CreateScheduleState extends State<CreateSchedule>
           //           (int.parse(apptPerHalfHour.text) * 2))
           //       .ceil();
           // });
+          setState(() => dayNumWithIssue = wt.dayNum);
           redSnackBar('Error', 'Inappropriate Timing of Schedule');
           return;
         }
       }
     }
+    setState(() => dayNumWithIssue = 0);
 
     final isValid = _formKey.currentState!.validate();
     if (isValid) {
@@ -275,7 +278,11 @@ class _CreateScheduleState extends State<CreateSchedule>
                                       }
                                     : null,
                               ),
-                              Text(getWT(dn).getTime(0))
+                              Text(getWT(dn).getTime(0),
+                                  style: TextStyle(
+                                      color: dn == dayNumWithIssue
+                                          ? Colors.red
+                                          : Colors.black))
                             ])),
                         DataCell(Column(
                             mainAxisSize: MainAxisSize.min,
@@ -292,7 +299,11 @@ class _CreateScheduleState extends State<CreateSchedule>
                                       }
                                     : null,
                               ),
-                              Text(getWT(dn).getTime(1))
+                              Text(getWT(dn).getTime(1),
+                                  style: TextStyle(
+                                      color: dn == dayNumWithIssue
+                                          ? Colors.red
+                                          : Colors.black))
                             ])),
                         DataCell(Column(
                             mainAxisSize: MainAxisSize.min,
@@ -309,7 +320,11 @@ class _CreateScheduleState extends State<CreateSchedule>
                                       }
                                     : null,
                               ),
-                              Text(getWT(dn).getTime(2))
+                              Text(getWT(dn).getTime(2),
+                                  style: TextStyle(
+                                      color: dn == dayNumWithIssue
+                                          ? Colors.red
+                                          : Colors.black))
                             ])),
                         DataCell(Column(
                             mainAxisSize: MainAxisSize.min,
@@ -325,7 +340,11 @@ class _CreateScheduleState extends State<CreateSchedule>
                                       }
                                     : null,
                               ),
-                              Text(getWT(dn).getTime(3))
+                              Text(getWT(dn).getTime(3),
+                                  style: TextStyle(
+                                      color: dn == dayNumWithIssue
+                                          ? Colors.red
+                                          : Colors.black))
                             ])),
                         DataCell(Container(
                             alignment: AlignmentDirectional.center,
@@ -524,8 +543,8 @@ class _CreateScheduleState extends State<CreateSchedule>
             // animationController!.forward();
             // await Future.delayed(const Duration(seconds: 3))
             //     .whenComplete(() => animationController!.reverse());
-            Future.delayed(const Duration(milliseconds: 700))
-              .whenComplete(() => redSnackBar('Inappropriate Timing', 'Error'));
+            Future.delayed(const Duration(milliseconds: 700)).whenComplete(
+                () => redSnackBar('Inappropriate Timing', 'Error'));
             _showOverlay(
                 context, whichTimeCounter, wt.getTime(whichTimeCounter),
                 wt: wt);
@@ -544,7 +563,7 @@ class _CreateScheduleState extends State<CreateSchedule>
                   // without cancel button easier to manage ba
                   // after adding everything, add cancel button should be okay?
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.cancel),
@@ -556,11 +575,11 @@ class _CreateScheduleState extends State<CreateSchedule>
                   const SizedBox(height: 10),
                   Text(workTimeString[whichTimeCounter],
                       style: const TextStyle(fontSize: 28)),
-                  const SizedBox(height: 10),
-                  const Text('For optimal experience, SCROLL to pick time',
-                      style: TextStyle(fontSize: 10, color: Colors.red)),
-                  const Text('Do NOT drag scrollbar on web',
-                      style: TextStyle(fontSize: 10, color: Colors.red)),
+                  // const SizedBox(height: 10),
+                  // const Text('For optimal experience, SCROLL to pick time',
+                  //     style: TextStyle(fontSize: 10, color: Colors.red)),
+                  // const Text('Do NOT drag scrollbar on web',
+                  //     style: TextStyle(fontSize: 10, color: Colors.red)),
                   const SizedBox(height: 30),
                   TimePickerSpinner(
                     time: time != '00:00H'
@@ -976,9 +995,9 @@ class WorkTime {
   String getTime(int ii) => workTime[workTimeName[ii]]!;
 }
 
-extension on DateTime {
-  DateTime roundDown({Duration delta = const Duration(seconds: 15)}) {
-    return DateTime.fromMillisecondsSinceEpoch(
-        millisecondsSinceEpoch - millisecondsSinceEpoch % delta.inMilliseconds);
-  }
-}
+// extension on DateTime {
+//   DateTime roundDown({Duration delta = const Duration(seconds: 15)}) {
+//     return DateTime.fromMillisecondsSinceEpoch(
+//         millisecondsSinceEpoch - millisecondsSinceEpoch % delta.inMilliseconds);
+//   }
+// }

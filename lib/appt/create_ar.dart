@@ -48,10 +48,20 @@ class _CreateArState extends State<CreateAr> {
     hashCode: getHashCode,
   );
   ClinicModel cm = ClinicModel();
+  final Map<String, int> urgency = {
+    'Emergency': 3,
+    'Semi-E': 2,
+    'Not Urgent': 1,
+  };
+  late int generalUrg = 0;
+  late List<String> urgList;
+
+  final yourScrollController = ScrollController();
 
   @override
   void initState() {
     allClinics = getAllClinic();
+    urgList = urgency.keys.toList();
     super.initState();
   }
 
@@ -83,21 +93,55 @@ class _CreateArState extends State<CreateAr> {
           downloadURLs.add(url);
         }
 
+        int skrg = DateTime.now().millisecondsSinceEpoch;
         apptReqRef.add({
           'ptId': ptListController.currentPt.value.id,
           'ptIc': ptListController.currentPt.value.ic,
           'ptName': ptListController.currentPt.value.name,
           'toClinicId': cm.id, // apptController.clinic.text,
-          'toClinicName': cm.shortName,
+          'toClinicName': cm.name,
           'fromClinicId': '',
           'reqById': '',
-          'attById': '',
+          // 'attById': '',
+          'urgency': generalUrg,
+          'screenedById': '',
+          'screenedByName': '',
+          'screenedScheId': '',
+          'screenedScheName': '',
+          'screenedDurStart': '',
+          'screenedDurStartInt': 0,
+          'screenedDurEnd': '',
+          'screenedDurEndInt': 0,
+          'givenApptById': '',
+          'givenApptByName': '',
+
           'prefApptTime':
               _selectedDays.map((dt) => dt.millisecondsSinceEpoch).toList(),
           'remarks': apptController.notes.text,
           'refLetterUrl': downloadURLs, //url,
-          'createdAt': DateTime.now().millisecondsSinceEpoch,
-          'updatedAt': DateTime.now().millisecondsSinceEpoch,
+          'createdAt': skrg,
+          'updatedAt': skrg,
+          'screenedAt': 0,
+          'apptGivenAt': 0,
+        }).then((r) {
+          // this is by pt
+          arDirRef.add({
+            'arId': r.id,
+            'toClinicId': cm.id,
+            'toClinicName': cm.name,
+            'active': true,
+            'accepted': false,
+            'apptId': '',
+            'message': apptController.notes.text,
+            'directedById': '',
+            'directedByName': '',
+            'redirectedById': '',
+            'redirectedByName': '',
+            'redirectedToClinicId': '',
+            'redirectedToClinicName': '',
+            'createdAt': skrg,
+            'updatedAt': skrg,
+          });
         }).then((r) {
           Get.back();
           greenSnackBar('Request Sent', 'Please wait for confirmation');
@@ -129,7 +173,7 @@ class _CreateArState extends State<CreateAr> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Create Request'),
+        title: Text('new req'.tr, overflow: TextOverflow.ellipsis),
         actions: [
           _isLoading
               ? const Center(
@@ -208,7 +252,7 @@ class _CreateArState extends State<CreateAr> {
                               constraints: BoxConstraints(
                                   maxWidth:
                                       MediaQuery.of(context).size.width * 0.7),
-                              child: Text(value.shortName),
+                              child: Text(value.name),
                             ));
                       }).toList(),
                     );
@@ -227,6 +271,61 @@ class _CreateArState extends State<CreateAr> {
                   apptController.notes.text = value!.trim();
                 },
               ),
+              const SizedBox(height: 10),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: const [
+              //     Tooltip(
+              //       triggerMode: TooltipTriggerMode.tap,
+              //       showDuration: Duration(seconds: 10),
+              //       message:
+              //           'Emergency = Within a day,\nSemi-E = 1-2 Week,\nNot Urgent = More than 2 weeks',
+              //       child: Icon(Icons.info), //Text
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 5),
+              // SizedBox(
+              //   height: 50,
+              //   child: Scrollbar(
+              //     thumbVisibility: true,
+              //     thickness: 10,
+              //     controller: yourScrollController,
+              //     child: Padding(
+              //       padding: const EdgeInsets.only(bottom: 10.0),
+              //       child: ListView.builder(
+              //           controller: yourScrollController,
+              //           shrinkWrap: true,
+              //           scrollDirection: Axis.horizontal,
+              //           itemCount: urgency.length,
+              //           itemBuilder: (context, index) {
+              //             return Container(
+              //               margin: const EdgeInsets.only(right: 2),
+              //               decoration: BoxDecoration(
+              //                   border: Border.all(),
+              //                   borderRadius: BorderRadius.circular(5)),
+              //               width: 180,
+              //               child: RadioListTile<int>(
+              //                 selected: generalUrg == urgency[urgList[index]],
+              //                 title: Text(urgList[index],
+              //                     overflow: TextOverflow.ellipsis),
+              //                 value: urgency[urgList[index]]!,
+              //                 groupValue: generalUrg,
+              //                 dense: true,
+              //                 visualDensity: const VisualDensity(
+              //                     horizontal: -3, vertical: -3),
+              //                 onChanged: (int? value) async {
+              //                   setState(() {
+              //                     generalUrg = value!;
+              //                   });
+              //                 },
+              //               ),
+              //             );
+              //           }),
+              //     ),
+              //   ),
+              // ),
+              const Text('Choose preferred dates:'),
               MultiCalendar(sd: _selectedDays),
               const SizedBox(height: 15),
               RefLetterPicker(_pickedImage),

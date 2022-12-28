@@ -19,6 +19,8 @@ final ffi = FirebaseFirestore.instance;
 final CollectionReference appOwnerRef = ffi.collection('appOwner');
 final CollectionReference ptRef = ffi.collection('pts');
 final CollectionReference apptReqRef = ffi.collection('apptReq');
+final CollectionReference resReqRef = ffi.collection('resReq');
+final CollectionReference arDirRef = ffi.collection('arDir');
 final CollectionReference drsnReqRef = ffi.collection('drSn');
 final CollectionReference apptRef = ffi.collection('appt');
 final CollectionReference apptTimeRef = ffi.collection('apptTime');
@@ -32,6 +34,7 @@ final CollectionReference roomRef = ffi.collection('room');
 final CollectionReference attachRoomRef = ffi.collection('attachRoom');
 final CollectionReference queueRef = ffi.collection('queue');
 final CollectionReference ptNotiRef = ffi.collection('ptNoti');
+final CollectionReference holidayRef = ffi.collection('holiday');
 final CollectionReference clinicNotiRef = ffi.collection('clinicNoti');
 
 final isWebMobile = kIsWeb &&

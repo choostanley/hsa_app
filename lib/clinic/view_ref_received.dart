@@ -29,16 +29,13 @@ class _ViewRefReceivedState extends State<ViewRefReceived> {
 
   late ApptReq apptReq;
   late PtModel localPt;
-  late Future<void> _initPtData;
+  // late Future<void> _initPtData;
 
   Future<void> _initPt() async {
-    print(apptReq.ptId);
     PtModel pt = await ptRef.doc(apptReq.ptId).get().then((onValue) {
-      print(onValue.exists);
+      // print(onValue.exists);
       return PtModel.fromSnapshot(onValue);
     });
-    print('hello');
-    // print(pt.name);
     localPt = pt;
   }
 
@@ -53,7 +50,7 @@ class _ViewRefReceivedState extends State<ViewRefReceived> {
   @override
   void initState() {
     apptReq = widget.ar;
-    _initPtData = _initPt();
+    // _initPtData = _initPt();
     super.initState();
   }
 
@@ -62,7 +59,7 @@ class _ViewRefReceivedState extends State<ViewRefReceived> {
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: const Text('View Received Referral'),
+          title: const Text('View Screened Referral'),
           actions: [
             IconButton(
               icon: const Icon(Icons.account_circle, size: 30),

@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hsa_app/clinic/bluetooth_test.dart';
+import 'package:hsa_app/clinic/new_holiday.dart';
+import 'package:hsa_app/clinic/res_req_list.dart';
 import 'clinic/appt_qr_camera.dart';
 import 'clinic/manual_reg_appt.dart';
 import 'clinic/members_page.dart';
@@ -18,6 +20,7 @@ import 'clinic/controllers/list_day_controller.dart';
 import 'clinic/controllers/list_hour_appt_controller.dart';
 import 'clinic/controllers/list_schedule_controller.dart';
 import 'clinic/create_clinic.dart';
+import 'clinic/unscreened_ref.dart';
 import 'common/firebase/firebase_const.dart';
 import 'clinic/controllers/list_ref_received_controller.dart';
 import 'clinic/controllers/drsn_controller.dart';
@@ -110,12 +113,15 @@ class MyApp extends StatelessWidget {
             page: () => SchedulePage(
                   sc: scheduleListController.currentSchedule.value,
                 )),
+        GetPage(name: unscreenedRefRoute, page: () => UnscreenedRef()),
         GetPage(name: receivedRefRoute, page: () => RefReceived()),
+        GetPage(name: resReqListRoute, page: () => ResReqList()),
         GetPage(name: roomsRoute, page: () => const RoomsPage()),
         GetPage(name: membersRoute, page: () => MembersPage()),
         GetPage(name: scanApptRoute, page: () => const ApptQrCamera()),
         GetPage(name: regApptRoute, page: () => const ManualRegAppt()),
         GetPage(name: bluetoothRoute, page: () => const BluetoothTest()),
+        GetPage(name: newHolidayRoute, page: () => const NewHoliday()),
       ],
       debugShowCheckedModeBanner: false,
       title: 'HSA Clinic',

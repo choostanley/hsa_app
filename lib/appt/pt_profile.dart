@@ -46,7 +46,7 @@ class _PtProfileState extends State<PtProfile> {
           child: Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
-              title: Text('profile'.tr),
+              title: Text('profile'.tr, overflow: TextOverflow.ellipsis),
               // leading: IconButton(
               //   icon: const Icon(Icons.menu),
               //   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
@@ -61,7 +61,7 @@ class _PtProfileState extends State<PtProfile> {
                 )
               ],
               bottom: const TabBar(tabs: [
-                Tab(icon: Icon(Icons.event_note)),
+                Tab(icon: Icon(Icons.list_alt)), // event_note wysiwyg
                 Tab(icon: Icon(Icons.list))
               ]),
             ),

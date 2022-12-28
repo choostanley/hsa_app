@@ -1,8 +1,8 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hsa_app/appt/controllers/controllers.dart';
 import 'package:hsa_app/appt/models/appt_req.dart';
 import 'package:hsa_app/clinic/controllers/controllers.dart';
 import 'package:hsa_app/clinic/models/day_model.dart';
@@ -17,6 +17,7 @@ import '../helpers/routes.dart';
 import '../models/appt.dart';
 import '../models/hour_model.dart';
 import 'utils.dart';
+import '../helpers/between_range_datetime.dart';
 
 class MakeApptBundle extends StatefulWidget {
   const MakeApptBundle(
@@ -49,11 +50,49 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
   List<HourModel> _dayHours = [];
   final yourScrollController = ScrollController();
   final yourScrollController1 = ScrollController();
+  bool screened = false;
+  late DateTimeRange range; // try use
 
   @override
   void initState() {
     localAr = widget.ar;
+    if (localAr.screenedById != '') {
+      if (localAr.screenedDurEndInt != 0) {
+        DateTime sAnchor =
+            localAr.createdAt.add(Duration(days: localAr.screenedDurStartInt));
+        DateTime eAnchor =
+            localAr.createdAt.add(Duration(days: localAr.screenedDurEndInt));
+        range = DateTimeRange(
+            start: DateTime(sAnchor.year, sAnchor.month, sAnchor.day),
+            end:
+                DateTime(eAnchor.year, eAnchor.month, eAnchor.day, 23, 59, 59));
+      } else {
+        DateTime expectedAnchor =
+            localAr.createdAt.add(Duration(days: localAr.screenedDurStartInt));
+        DateTime sDate = expectedAnchor.subtract(const Duration(days: 4));
+        DateTime eDate = expectedAnchor.add(const Duration(days: 4));
+        range = DateTimeRange(
+            start: DateTime(sDate.year, sDate.month, sDate.day),
+            end: DateTime(eDate.year, eDate.month, eDate.day, 23, 59, 59));
+      }
+    }
+    if ((widget.smList.length == 1) || localAr.screenedScheId.isNotEmpty) {
+      onlyOneSm();
+    }
     super.initState();
+  }
+
+  void onlyOneSm() async {
+    generalSc = widget.smList.first;
+    if (localAr.screenedScheId.isNotEmpty) {
+      generalSc =
+          widget.smList.firstWhere((sm) => sm.id == localAr.screenedScheId);
+    }
+    Widget onlyCal = await createCalender(generalSc);
+    setState(() {
+      chosedSm = widget.smList.first;
+      calender = onlyCal;
+    });
   }
 
   @override
@@ -145,19 +184,19 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
                           color: Colors.lightBlue,
                           border: Border.all(width: 2.5, color: Colors.red)),
                     ),
-                    const Text(' = Patient preferred dates.')
+                    const Text(' = Patient preferred dates.'),
                   ]),
+                  if (localAr.screenedById != '')
+                    const Text('Appt to be given between:'),
+                  if (localAr.screenedById != '')
+                    Text(
+                        '   ${getDate(range.start)}  till  ${getDate(range.end)}'),
+                  // insert here
                 ],
               )
             : null,
         initiallyExpanded: widget.open,
         children: [
-          // FutureBuilder<List<ScheduleModel>>(
-          //   future: scheduleListController.getScheduleModels(),
-          //   builder: (BuildContext context,
-          //       AsyncSnapshot<List<ScheduleModel>> snapshot) {
-          //     if (snapshot.connectionState == ConnectionState.done) {
-          //       return
           SizedBox(
             height: 50,
             child: Scrollbar(
@@ -191,26 +230,20 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
                           onChanged: (ScheduleModel? value) async {
                             // setState(() async {
                             generalSc = value!;
-                            calender = await createCalender(generalSc);
+                            Widget newCal = await createCalender(generalSc);
                             setState(() {
                               generalSc = value;
                               chosedSm = value;
+                              calender = newCal;
+                              _hourRow.value = [];
                             });
-                            // });
                           },
                         ),
                       );
                     }),
               ),
             ),
-          )
-          //       ;
-          //     } else {
-          //       return const CircularProgressIndicator();
-          //     }
-          //   },
-          // )
-          ,
+          ),
           calender,
           const SizedBox(height: 5),
           ValueListenableBuilder<List<HourModel>>(
@@ -235,7 +268,9 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
                               HourModel localHr = value[index];
                               int curNo = localHr.curApptNum;
                               int maxNo = localHr.maxForThisSlot;
-                              bool stillCanAdd = maxNo > curNo;
+                              bool stillCanAdd = (maxNo > curNo) &&
+                                  (localHr.startDateTime
+                                      .isAfter(DateTime.now()));
                               String apptNo = localHr.lunchHour
                                   ? '[LHr]'
                                   : '[$curNo/$maxNo]';
@@ -350,7 +385,7 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
         'scheduleId': generalSc.id,
         'scheduleName': generalSc.name,
         'dateString': getDate(hr.startDateTime),
-        'dateTimeStamp': hr.startDateTime.millisecondsSinceEpoch,
+        'dateTimeStampInt': hr.startDateTime.millisecondsSinceEpoch,
         'staffId': auth.currentUser!.uid,
         'apptReqId': localAr.id,
         'approveRemarks': remCont.text.trim(),
@@ -364,13 +399,28 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
       Map<String, dynamic> apptTimeData = {
         'dayId': hr.dayId,
         'hourId': hr.id,
-        'apptTime': hr.startDateTime,
+        'apptTimeInt': hr.startDateTime.millisecondsSinceEpoch,
         'rescReason': '', // reschedule reason
         'active': true,
         'rescheduled': false,
         'createdAt': DateTime.now().millisecondsSinceEpoch,
         'updatedAt': DateTime.now().millisecondsSinceEpoch,
       };
+      Map<String, dynamic> arData = {
+        'givenApptById': userController.user.id,
+        'givenApptByName': userController.user.name,
+      };
+      if (localAr.screenedById == '') {
+        int screenDur = hr.startDateTime.difference(localAr.createdAt).inDays;
+        arData['screenedById'] = userController.user.id;
+        arData['screenedByName'] = userController.user.name;
+        arData['screenedDurStart'] = '$screenDur Day';
+        arData['screenedDurStartInt'] = screenDur;
+        // apptGivenAt
+        // screenedAt
+        // screenedScheId
+        // screenedScheName
+      }
       Appt apptModelInstant = Appt();
       await apptRef.add(apptData).then((onValue) {
         // print('reached');
@@ -389,11 +439,23 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
               .get()
               .then((snapshot) => snapshot.get('curApptNum'))
           as int; // day appt no.
+      QuerySnapshot<Object?> arDir = await arDirRef
+          .where('arId', isEqualTo: localAr.id)
+          .where('active', isEqualTo: true)
+          .where('accepted', isEqualTo: false)
+          .get();
+      if (arDir.docs.isNotEmpty) {
+        String arDirId = arDir.docs.first.id;
+        await arDirRef
+            .doc(arDirId)
+            .update({'accepted': true, 'apptId': apptData['id']});
+      }
       await hourRef.doc(hr.id).update({'curApptNum': han + 1});
       await dayRef.doc(hr.dayId).update({'curApptNum': dan + 1});
-      await apptReqRef
-          .doc(localAr.id)
-          .update({'attById': auth.currentUser!.uid});
+      await apptReqRef.doc(localAr.id).update(arData);
+      //   {'givenApptById': userController.user.id,
+      //   'givenApptByName': userController.user.name,}
+      // .update({'attById': auth.currentUser!.uid});
       dayListController.updateHourAppt(hr.dayId, hr.id);
       hourApptListController.updateHourModel(hr, apptModelInstant);
       return 'Good Shit';
@@ -451,7 +513,11 @@ class _MakeApptBundleState extends State<MakeApptBundle> {
               margin: const EdgeInsets.all(4.0),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
+                  color: localAr.screenedById == ''
+                      ? Theme.of(context).primaryColor
+                      : range.isWithinRange(date)
+                          ? Theme.of(context).primaryColor
+                          : Colors.pink,
                   borderRadius: BorderRadius.circular(10.0)),
               child: Text(
                 date.day.toString(),

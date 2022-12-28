@@ -6,6 +6,7 @@ class ApptTime {
   late String apptId;
   late String dayId;
   late String hourId;
+  late int apptTimeInt;
   late DateTime apptTime;
   late String rescReason;
   late bool active;
@@ -21,7 +22,8 @@ class ApptTime {
       apptId = snapshot.get('apptId');
       dayId = snapshot.get('dayId');
       hourId = snapshot.get('hourId');
-      apptTime = snapshot.get('apptTime');
+      apptTimeInt = snapshot.get('apptTimeInt');
+      apptTime = DateTime.fromMillisecondsSinceEpoch(snapshot.get('createdAt'));
       rescReason = snapshot.get('rescReason');
       active = snapshot.get('active');
       rescheduled = snapshot.get('rescheduled');

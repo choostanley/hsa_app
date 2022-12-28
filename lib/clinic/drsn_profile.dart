@@ -109,7 +109,7 @@ class _DrsnProfileState extends State<DrsnProfile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             const SizedBox(height: 10),
-                            Text("Name: ${useHere.title}. ${useHere.name}",
+                            Text("Name: ${useHere.getName()}",
                                 style: const TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 4),
@@ -122,6 +122,10 @@ class _DrsnProfileState extends State<DrsnProfile> {
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 4),
                             Text("Hp no: ${useHere.phoneNum}",
+                                style: const TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 4),
+                            Text("Email: ${useHere.email}",
                                 style: const TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 10),

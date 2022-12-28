@@ -192,6 +192,7 @@ class ImageDialog extends StatelessWidget {
         decoration:
             BoxDecoration(border: Border.all(width: 2, color: Colors.white)),
         child: InteractiveViewer(
+          clipBehavior: Clip.none,
           constrained: true,
           maxScale: 5.0,
           minScale: 0.5,

@@ -39,29 +39,34 @@ class _HourRowState extends State<HourRow> {
   Container apptTile(Appt appt, int no) {
     // add margin
     return Container(
-      padding: const EdgeInsets.all(0),
-      margin: const EdgeInsets.only(right: 3, top: 1.5, bottom: 2),
+      padding: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(right: 4),
       decoration: BoxDecoration(
           border: Border.all(), borderRadius: BorderRadius.circular(5)),
       width: 160,
+      height: 20,
       child: ListTile(
-          dense: true,
-          contentPadding: const EdgeInsets.only(left: 8, top: 5, bottom: 0),
-          visualDensity: const VisualDensity(vertical: -4, horizontal: -4),
-          title: Text(
-            '${no.toString()}. ${appt.ptName}', //${appt.name}',
+        dense: true,
+        contentPadding: const EdgeInsets.only(left: 8, top: 5),
+        visualDensity: const VisualDensity(vertical: -4),
+        title: Text(
+          '${no.toString()}. ${appt.ptName}', //${appt.name}',
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize:
+                  15.0),
+          // this mtfk removed the listTile top padding wtf
+          // style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(appt.approveRemarks,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize:
-                    15.0), // this mtfk removed the listTile top padding wtf
-            // style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(appt.approveRemarks, overflow: TextOverflow.ellipsis),
-          onTap: () {
-            // apptController.setAppt(appt); -- yeah we need an apptCont in clinic too
-            Get.to(apptPageRoute);
-          }),
+            style: const TextStyle(fontWeight: FontWeight.normal)),
+        // onTap: () {
+        //   // apptController.setAppt(appt); -- yeah we need an apptCont in clinic too
+        //   Get.to(apptPageRoute);
+        // }
+      ),
     );
   }
 
@@ -75,6 +80,7 @@ class _HourRowState extends State<HourRow> {
         margin: const EdgeInsets.only(right: 4),
         decoration: BoxDecoration(
             border: Border.all(), borderRadius: BorderRadius.circular(5)),
+        height: 70,
         width: 128,
         child: ListTile(
           dense: true,
@@ -96,14 +102,13 @@ class _HourRowState extends State<HourRow> {
                   },
             style: ButtonStyle(
                 // padding: MaterialStateProperty.all<EdgeInsets>(1.0) //const EdgeInsets.all(1),
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                backgroundColor: localHr.lunchHour
+                    ? MaterialStateProperty.all<Color>(Colors.grey)
+                    : MaterialStateProperty.all<Color>(Colors.blue),
                 visualDensity:
                     const VisualDensity(horizontal: -4, vertical: -4)),
             child: const Text('Load Appt'),
           ),
-          // tileColor: localHr.lunchHour
-          //     ? Colors.redAccent
-          //     : Colors.blue,
         ));
   }
 
@@ -125,17 +130,23 @@ class _HourRowState extends State<HourRow> {
                         thumbVisibility: true,
                         thickness: 10,
                         controller: yourScrollController,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: value.length,
-                            itemBuilder: (context, index) {
+                        child:
+                            // Padding(
+                            //   padding: const EdgeInsets.only(bottom: 10.0),
+                            //   child:
+                            SizedBox(
+                              height: 70,
+                              child: ListView.builder(
+                          controller: yourScrollController,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: value.length,
+                          itemBuilder: (context, index) {
                               return apptTile(
-                                  value[index], value.length - (index + 1));
-                            },
-                          ),
+                                  value[index], value.length - (index));
+                          },
+                          // ),
                         ),
+                            ),
                       );
               },
             ),
